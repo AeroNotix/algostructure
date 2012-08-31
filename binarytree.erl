@@ -1,5 +1,5 @@
 -module(binarytree).
--export([init/0,add/1,addNValues/1,walk/0]).
+-export([init/0,add/1,addNValues/1,walk/0,addValues/1]).
 -export([server/0,server/3,retrieve/1]).
 
 %% Registers the async'd Pid with the atom 'root'.
@@ -62,7 +62,21 @@ server(Left, Value, Right) ->
                     RVals = retrieve(Right)
             end,
             Who ! {val, LVals++[Value]++RVals},
-            server(Left, Value, Right)
+            server(Left, Value, Right);
+        
+        quit ->
+            if
+                Left =:= nil ->
+                    ok;
+                true ->
+                    Left ! quit
+            end,
+            if
+                Right =:= nil ->
+                    ok;
+                true ->
+                    Right ! quit
+            end
     end.
 
 %% Kicks off the walk by sending to the root node.
@@ -98,5 +112,11 @@ retrieve(Who) ->
 addNValues(0) ->
     ok;
 addNValues(N) ->
-    add(random:uniform(1000)),
+    add(random:uniform(N)),
     addNValues(N-1).
+
+addValues(0) ->
+    add(0);
+addValues(N) ->
+    add(N),
+    addValues(N-1).
