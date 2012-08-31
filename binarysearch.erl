@@ -4,6 +4,14 @@
 tail(List) ->
     hd(lists:reverse(List)).
 
+search(For, In) ->
+    PosTail = tail(In),
+    if 
+        PosTail =:= For ->
+            length(In) - 1;
+        true ->
+            search(For, In, 0, length(In))
+    end;
 search(For, In) when length(In) =:= 1 ->
     if 
         hd(In) =:= For ->
@@ -14,15 +22,7 @@ search(For, In) when length(In) =:= 1 ->
 search(For, In) when hd(In) =:= For ->
     0;
 search(_For, In) when length(In) =:= 0 ->
-    -1;
-search(For, In) ->
-    PosTail = tail(In),
-    if 
-        PosTail =:= For ->
-            length(In) - 1;
-        true ->
-            search(For, In, 0, length(In))
-    end.
+    -1.
 search(For, In, LBound, UBound) when UBound - LBound =:= 1 ->
     if 
         hd(In) =:= For ->
