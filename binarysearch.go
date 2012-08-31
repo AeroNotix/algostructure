@@ -13,55 +13,47 @@ func head(li []int) int {
 }
 
 func search(piece int, in []int) int {
+	if len(in) == 3 {
+		for idx, item := range in {
+			if item == piece {
+				return idx
+			}
+		}
+		return -1
+	}
 	if len(in) == 1 {
 		if in[0] == piece {
 			return 0
 		}
 		return - 1
 	}
-
 	if len(in) == 0 {
 		return -1
 	}
-
 	if head(in) == piece {
 		return 0
-	}
-	
+	}	
 	if tail(in) == piece {
-		return len(in) -1
+		return len(in) - 1
 	}
-
 	return binsearch(piece, in, 0, len(in)-1)
 }
 
 func binsearch(piece int, in []int, ubound, lbound int) int {
-	mid := (ubound + lbound) / 2
 
-	if in[ubound] == piece {
-		return ubound
-	}
+	if in[ubound] == piece { return ubound }
+	if in[lbound] == piece { return lbound }
+	if ubound >= lbound { return -1 }
 
-	if in[lbound] == piece {
-		return lbound
-	}
-
+	mid := ubound + lbound / 2
 	if in[mid] == piece {
 		return mid
 	}
-
-	if lbound > ubound { return -1 }
-
 	if in[mid] > piece {
-		return binsearch(piece, in, mid, lbound)
+		return binsearch(piece, in, lbound, mid-1)
 	}
+	return binsearch(piece, in, mid+1, ubound)
 
-	if in[mid] < piece {
-		return binsearch(piece, in, lbound, mid)
-	}
-
-
-	panic("Unreachable")
 }
 
 func main() {
