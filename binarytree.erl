@@ -1,91 +1,101 @@
 -module(binarytree).
 -compile(export_all).
 
+%% Registers the async'd Pid with the atom 'root'.
 init() ->
     register(root, spawn(binarytree,server,[])).
 
+%% "Constructor" for the server, seeds initial values.
 server() ->
     server(nil, nil, nil).
 server(Left, Value, Right) ->
     receive
-        {add, Data} ->
-            if
+        {add, Data, From} ->
+            if  %% Value =:= nil only on the first root node.
                 Value =:= nil ->
-                    io:format("Valuenil"),
-                    server(Left, [Data], Right);
+                    From ! added,
+                    server(Left, Data, Right);
                 Value > Data ->
-                    if 
+                    if  %% Left/Right =:= nil when it's a bare node.
+                        %% So we spawn a new node with the Data as
+                        %% it's value.
                         Left =:= nil ->
-                            io:format("Creating left node"),
-                            NewPid = spawn(binarytree, server, [nil, [Data], nil]),
+                            From ! added,
+                            NewPid = spawn(binarytree, server, [nil, Data, nil]),
                             server(NewPid, Value, Right);
                         true ->
-                            io:format("~p~n",[Left]),
-                            Left ! {add, Data},
+                            Left ! {add, Data, From},
                             server(Left, Value, Right)
                     end;
 
-                Value < Data ->
+                true ->
                     if
                         Right =:= nil ->
-                            io:format("Creating right node"),
-                            NewPid = spawn(binarytree, server, [nil, [Data], nil]),
+                            From ! added,
+                            NewPid = spawn(binarytree, server, [nil, Data, nil]),
                             server(Left, Value, NewPid);
                         true ->
-                            Right ! {add, Data},
+                            Right ! {add, Data, From},
                             server(Left, Value, Right)
                     end
             end;
-        {val, Who} ->
-            Who ! Value,
-            server(Left, Value, Right);
 
-        {left, Who} ->
-            Who ! {val, Value},
-            if 
-                Left /= nil ->
-                    Left ! {left, Who};
-                Left =:= nil ->
-                    Who ! fin
-            end,
-            server(Left, Value, Right);
-
-        {right, Who} ->
-            Who ! {val, Value},
-            io:format("~p~n",[Right]),
+        {walk, Who} ->
+            %% When we get a call to walk, we recursively
+            %% tell sub-nodes to walk as well using the
+            %% call to retrieve which will accumulate
+            %% the results and then send it back up the
+            %% chain.
+            L = Left,
             if
-                Right /= nil ->
-                    Right ! {right, Who};
-                Right =:= nil ->
-                    Who ! fin
+                L =:= nil ->
+                    LVals = [];
+                true ->
+                    LVals = retrieve(Left)
             end,
-            server(Left, Value, Right)            
+            R = Right,
+            if
+                R =:= nil ->
+                    RVals = [];
+                true ->
+                    RVals = retrieve(Right)
+            end,
+            Who ! {val, LVals++[Value]++RVals},
+            server(Left, Value, Right)
     end.
 
-
-walk() ->
-    Pid = spawn(binarytree, walk, [[], self()]),
-    root ! {left, Pid},
+%% Kicks off the walk by sending to the root node.
+walk()->
+    root ! {walk, self()},
     receive
-        {fin, Left} ->
-            ok
+        {val, Values} ->
+            Val = Values
+    after
+        5000 ->
+            Val = []
     end,
-    root ! {right, Pid},
-    receive
-        {fin, Right} ->
-            ok
-    end,
-    Left++Right.
-        
-walk(Values, Who) ->
-    receive
-        {val, Value} ->
-            io:format("~p~n",[Values]),
-            walk(Values ++ Value, Who);
-        fin ->
-            io:format("Finishing accumulating"),
-            Who ! {fin, Values}
-    end.
+    Val.
 
+%% Adds data to the tree.
 add(Data) ->
-    root ! {add, Data}.
+    root ! {add, Data, self()},
+    receive
+        added ->
+            ok
+    end.
+
+%% Used internally by the binary tree to retrieve sub
+%% node's data.
+retrieve(Who) ->
+    Who ! {walk, self()},
+    receive
+        {val, Values} ->
+            Vals = Values
+    end,
+    Vals.
+
+addNValues(0) ->
+    ok;
+addNValues(N) ->
+    add(random:uniform(1000)),
+    addNValues(N-1).
