@@ -1,5 +1,6 @@
 -module(binarytree).
--compile(export_all).
+-export([init/0,add/1,addNValues/1,walk/0]).
+-export([server/0,server/3,retrieve/1]).
 
 %% Registers the async'd Pid with the atom 'root'.
 init() ->
