@@ -89,16 +89,16 @@ func main() {
 		return true
 	})
 
-	intslice := make([]int, 0, 10000)
-	for x := 0; x < 10000; x++ {
+	intslice := make([]int, 0, 100000)
+	for x := 0; x < 100000; x++ {
 		intslice = append(intslice, x)
 	}
-	intslice2 := make([]int, 0, 10000)
-	for x := 0; x < 10000; x++ {
+	intslice2 := make([]int, 0, 100000)
+	for x := 0; x < 100000; x++ {
 		intslice2 = append(intslice2, x)
 	}
-	intslice3 := make([]int, 0, 10000)
-	for x := 0; x < 10000; x++ {
+	intslice3 := make([]int, 0, 100000)
+	for x := 0; x < 100000; x++ {
 		intslice3 = append(intslice3, x)
 	}
 
