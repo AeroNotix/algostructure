@@ -1,10 +1,11 @@
 package main
 
 import (
-	"os"
+	"time"
 	"fmt"
-	"strings"
 	"io/ioutil"
+	"os"
+	"strings"
 )
 
 type Node struct {
@@ -33,7 +34,9 @@ func CommonPrefix(s1, s2 string) (bool, string) {
 			break
 		}
 	}
-	if x == 0 { return false, "" }
+	if x == 0 {
+		return false, ""
+	}
 	return true, use[:x]
 }
 
@@ -43,6 +46,8 @@ func New(prefix string, nodes ...*Node) *Node {
 }
 
 // Inserts a string where the string is correctly supposed to go.
+//
+// Will rearrange the tree according to the newly inserted node.
 func (n *Node) Insert(s string) {
 	for idx, node := range n.Nodes {
 		if ok, sub := CommonPrefix(node.prefix, s); ok {
@@ -59,34 +64,25 @@ func (n *Node) Insert(s string) {
 	n.AddNode(s)
 }
 
+// Inserts a node directly to a node without trying to insert
+// it according to the prefix rules.
 func (n *Node) AddNode(s string) {
 	n.Nodes = append(n.Nodes, &Node{s, []*Node{}})
 }
 
-func (n *Node) contains(s, pre string) bool {
-	if len(s) == 0 {
-		return false
-	}
-	for _, node := range n.Nodes {
-		if pre+node.prefix == s {
-			return true
-		}
-		if strings.HasPrefix(s, pre+node.prefix) {
-			return node.contains(s, pre+node.prefix)
-		}
-	}
-	return false
-}
-
+// Creates a []string with all the entries which have a certain
+// prefix.
 func (n *Node) WithPrefix(s string) []string {
 	var out []string
 	for _, node := range n.Nodes {
-		ok, sub := CommonPrefix(s, node.prefix);
+		ok, sub := CommonPrefix(s, node.prefix)
 		if ok && (sub != s) {
 			subnodes := node.withPrefix(s[len(sub):])
 			for idx := 0; idx < len(subnodes); idx++ {
-				if len(s) == 1 { continue }
-				subnodes[idx] = s[:len(s)-1]+subnodes[idx]
+				if len(s) == 1 {
+					continue
+				}
+				subnodes[idx] = s[:len(s)-1] + subnodes[idx]
 			}
 			return subnodes
 		}
@@ -100,7 +96,7 @@ func (n *Node) WithPrefix(s string) []string {
 
 func (n *Node) withPrefix(s string) []string {
 	for _, node := range n.Nodes {
-		ok, sub := CommonPrefix(s, node.prefix);
+		ok, sub := CommonPrefix(s, node.prefix)
 		if ok && (sub != s) {
 			return node.withPrefix(s[len(sub):])
 		}
@@ -112,7 +108,6 @@ func (n *Node) withPrefix(s string) []string {
 
 	return []string{}
 }
-
 
 func (n *Node) Subnodes() []string {
 	var out []string
@@ -133,7 +128,6 @@ func (n *Node) subnodes(pre string) []string {
 	}
 	return out
 }
-	
 
 func (n Node) String() string {
 
@@ -158,25 +152,6 @@ func (n Node) Display(numtabs int) string {
 	return out
 }
 
-func main() {
-	fin, err := os.Open("C:\\dictionary.txt")
-	if err != nil {
-		fmt.Println(err)
-	}
-	fdata, err := ioutil.ReadAll(fin)
-	if err != nil {
-		fmt.Println(err)
-	}
-	strs := strings.Split(string(fdata), "\n")
-
-	root := &Node{}
-	m := make(map[string]bool)
-	for _, str := range strs {
-		root.Insert(str)
-		m[str] = true
-	}
-}
-
 func MapWithPrefix(m map[string]bool, s string) []string {
 	var out []string
 	for val, _ := range m {
@@ -185,4 +160,30 @@ func MapWithPrefix(m map[string]bool, s string) []string {
 		}
 	}
 	return out
+}
+
+func main() {
+	fin, err := os.Open("C:\\dictionary3.txt")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fdata, err := ioutil.ReadAll(fin)
+	if err != nil {
+		fmt.Println(err)
+	}
+	strs := strings.Split(string(fdata), "\n")
+	fmt.Println(len(strs))
+	root := &Node{}
+	m := make(map[string]bool)
+	for _, str := range strs {
+		root.Insert(str)
+		m[str] = true
+	}
+	t := time.Now()
+	root.WithPrefix("a")
+	fmt.Println(time.Now().Sub(t))
+	t = time.Now()
+	MapWithPrefix(m, "a")
+	fmt.Println(time.Now().Sub(t))
+
 }
