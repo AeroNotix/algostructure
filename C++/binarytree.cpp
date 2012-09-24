@@ -2,107 +2,111 @@
 #include <vector>
 #include <stdio.h>
 
+using namespace std;
+
 struct Tree {
   int Value;
   Tree *Left;
   Tree *Right;
 };
 
+Tree *NewNode(int i) {
+  Tree *t = new Tree;
+  t->Value = i;
+  t->Left = nullptr;
+  t->Right = nullptr;
+  return t;
+}
+
 class BinaryTree {
 
 public:
   BinaryTree();
   void Add(int);
-  std::vector<int> Walk();
+  vector<int> Walk();
+  unsigned int Levels() const;
 
 private:
+  unsigned levels;
   Tree *root;
-  void add(int i, Tree *leaf);
-  std::vector<int> walk(Tree *leaf);
+  void add(int i, Tree* &leaf);
+  vector<int> walk(Tree *leaf, vector<int>&);
 };
 
-BinaryTree::BinaryTree( ) {
-  root = NULL;
+BinaryTree::BinaryTree()
+  : root(nullptr), levels(0) {}
+
+unsigned int BinaryTree::Levels() const {
+  return levels;
 }
 
 void BinaryTree::Add(int i) {
-  if (root == NULL) {
-	root = new Tree;
-	root->Value=i;
-	return;
+
+  levels++;
+
+  if (root == nullptr) {
+    root = NewNode(i);
+    return;
   }
 
   if (root->Value < i) {
-	return add(i, root->Right);
+    return add(i, root->Right);
   }
   add(i, root->Left);
   return;
 }
 
-void BinaryTree::add(int i, Tree *leaf) {
-  if (leaf == NULL) {
-	leaf = new Tree;
-	leaf->Value = i;
-	return;
+void BinaryTree::add(int i, Tree* &leaf) {
+  if (leaf == nullptr) {
+    leaf = NewNode(i);
+    return;
   }
   if (leaf->Value < i) {
-	return add(i, leaf->Right);
+    return add(i, leaf->Right);
   }
   return add(i, leaf->Left);
 }
 
-std::vector<int> BinaryTree::Walk() {
+vector<int> BinaryTree::Walk() {
 
-  std::vector<int> out;
-  if (root == NULL) { 
-	return out;
+  vector<int> out;
+  if (root == nullptr) {
+    return out;
   }
-  std::vector<int> right;
-  std::vector<int>::const_iterator x;
-  right = walk(root->Right);
-  for (x=right.begin();x!=right.end();++x) {
-	out.push_back((*x));
-  }
+
+  walk(root->Left, out);
   out.push_back(root->Value);
-  std::vector<int> left;
-  left = walk(root->Left);
-  for (x=left.begin();x!=left.end();++x) {
-	out.push_back((*x));
-  }
+  walk(root->Right, out);
+
   return out;
 }
 
-std::vector<int> BinaryTree::walk(Tree *leaf) {
-  std::vector<int> out;
-  if (leaf == NULL) { 
-	return out;
+vector<int> BinaryTree::walk(Tree *leaf, vector<int>& out) {
+  if (leaf == nullptr) {
+    return out;
   }
 
-  std::vector<int> right;
-  std::vector<int>::const_iterator x;
-  right = walk(leaf->Right);
-  for (x=right.begin();x!=right.end();++x) {
-	out.push_back((*x));
-  }
+  walk(leaf->Left, out);
   out.push_back(leaf->Value);
-  std::vector<int> left;
-  left = walk(leaf->Left);
-  for (x=left.begin();x!=left.end();++x) {
-	out.push_back((*x));
-  }
+  walk(leaf->Right, out);
+
   return out;
 }
 
 int main() {
   BinaryTree btree;
-  btree.Add(5);
-  btree.Add(-1);
-  btree.Add(3);
+  vector<int> tree;
+
+  btree.Add(0);
   btree.Add(4);
-  std::vector<int> tree;
-  std::vector<int>::const_iterator x;
+  btree.Add(5);
+  btree.Add(-2);
+  btree.Add(-1);
+  btree.Add(8);
+
   tree = btree.Walk();
-  for (x=tree.begin();x!=tree.end();++x) {
-	std::cout << (*x) << "\n";
+
+  for (auto x = tree.begin(); x != tree.end(); ++x) {
+    cout << (*x) << "\n";
   }
 }
