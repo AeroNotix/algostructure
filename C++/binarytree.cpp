@@ -118,7 +118,29 @@ int main() {
 
 	tree = btree.Walk();
 
+	cout << "[ ";
 	for (auto x = tree.begin(); x != tree.end(); ++x) {
-		cout << (*x) << "\n";
+		cout << (*x) << " ";
 	}
+	cout << "]\n";
+
+
+	BinaryTree<string> btreestr;
+	vector<string> treestr;
+
+	btreestr.Add("YoYo");
+	btreestr.Add("Hi");
+	btreestr.Add("Howdy");
+	btreestr.Add("Sup");
+	btreestr.Add("Hello");
+	btreestr.Add("Wassup");
+
+	treestr = btreestr.Walk();
+
+	cout << "[ ";
+	for (auto x = treestr.begin(); x != treestr.end(); ++x) {
+		cout << (*x) << " ";
+	}
+	cout << "]\n";
+
 }
