@@ -7,10 +7,17 @@ using namespace std;
 template <class T>
 class Tree {
 public:
+	~Tree();
 	T Value;
-	Tree *Left;
-	Tree *Right;
+	Tree<T> *Left;
+	Tree<T> *Right;
 };
+
+template <class T>
+Tree<T>::~Tree() {
+	delete Left;
+	delete Right;
+}
 
 
 template <class T>
@@ -27,12 +34,13 @@ class BinaryTree {
 
 public:
 	BinaryTree();
+	~BinaryTree();
 	void Add(T);
 	vector<T> Walk();
-	T Levels() const;
+	unsigned int Levels() const;
 
 private:
-	unsigned levels;
+	unsigned int levels;
 	Tree<T> *root;
 	void add(T i, Tree<T>* &leaf);
 	vector<T> walk(Tree<T> *leaf, vector<T>&);
@@ -43,7 +51,12 @@ BinaryTree<T>::BinaryTree()
 	: root(nullptr), levels(0) {}
 
 template <class T>
-T BinaryTree<T>::Levels() const {
+BinaryTree<T>::~BinaryTree() {
+	delete root;
+}
+
+template <class T>
+unsigned int BinaryTree<T>::Levels() const {
 	return levels;
 }
 
@@ -124,7 +137,6 @@ int main() {
 	}
 	cout << "]\n";
 
-
 	BinaryTree<string> btreestr;
 	vector<string> treestr;
 
@@ -143,4 +155,25 @@ int main() {
 	}
 	cout << "]\n";
 
+
+	BinaryTree<double> btreedbl;
+	vector<double> treedbl;
+	btreedbl.Add(0.001);
+	btreedbl.Add(-0.001);
+	btreedbl.Add(0.0123);
+	btreedbl.Add(123123.00);
+	btreedbl.Add(123121.001);
+	btreedbl.Add(0.021);
+
+	treedbl = btreedbl.Walk();
+
+	cout << "[ ";
+	for (auto x = treedbl.begin(); x != treedbl.end(); ++x) {
+		cout << (*x) << " ";
+	}
+	cout << "]\n";
+
+	{ BinaryTree<int> nbtree; }
+
+	return 0;
 }
