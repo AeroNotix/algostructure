@@ -1,14 +1,14 @@
-package binTree;
+package BinaryTree;
 
 public class Tree {
     public Tree left;
     public Tree right;
-    public Integer value;
+    public Comparable value;
 
 
-    public Tree(Integer val){
-        value = val;
-        left = null;
-        right = null;
+    public Tree(Comparable val){
+        this.value = val;
+        this.left = null;
+        this.right = null;
     }
 }
