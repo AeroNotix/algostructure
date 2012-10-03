@@ -1,7 +1,6 @@
 package main
 
 import (
-	"time"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -55,7 +54,11 @@ func (n *Node) Insert(s string) {
 				node.Insert(s[len(sub):])
 				return
 			}
+			// changes N.Nodes[idx] prefix to the shorter
+			// version
 			n.Nodes[idx].prefix = n.Nodes[idx].prefix[len(sub):]
+			// makes a new Node and puts the previous one
+			// under it.
 			n.Nodes[idx] = New(sub, n.Nodes[idx])
 			n.Nodes[idx].Insert(s[len(sub):])
 			return
@@ -163,7 +166,7 @@ func MapWithPrefix(m map[string]bool, s string) []string {
 }
 
 func main() {
-	fin, err := os.Open("C:\\dictionary3.txt")
+	fin, err := os.Open(os.Args[1])
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -172,18 +175,10 @@ func main() {
 		fmt.Println(err)
 	}
 	strs := strings.Split(string(fdata), "\n")
-	fmt.Println(len(strs))
+
 	root := &Node{}
-	m := make(map[string]bool)
 	for _, str := range strs {
 		root.Insert(str)
-		m[str] = true
 	}
-	t := time.Now()
-	root.WithPrefix("a")
-	fmt.Println(time.Now().Sub(t))
-	t = time.Now()
-	MapWithPrefix(m, "a")
-	fmt.Println(time.Now().Sub(t))
 
 }
