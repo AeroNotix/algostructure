@@ -2,65 +2,62 @@
 #include <string>
 #include <iostream>
 #include <stdexcept>
+#include <fstream>
 
 template <class T>
 class Node {
 
 private:
     typedef typename T::iterator iter;
-    typedef T holding_type;
+    typedef typename T::difference_type difftype;
 
     T prefix;
-    std::vector<Node<T>> Nodes;
-    void Insert(iter a, iter b);
-    int DifferAt(T b);
-    int DifferAt(iter beg, iter end);
-    void Walk(std::vector<T> &out);
     int levels = 0;
 
-public:
-    Node() {};
-    explicit Node(T pre) : prefix(pre) {};
+    void Insert(iter a, iter b);
+    void Walk(std::vector<T> &out);
+    void Display(int);
+    std::vector<Node<T> > Nodes;
+    T DifferAt(iter beg);
 
+public:
     int Levels() const { return levels; };
+
+    Node() {};
+    explicit Node(T pre) :
+	prefix(pre) {};
+
+    Node(T pre, Node<T> n) :
+	prefix(pre) {
+	Nodes.push_back(n);
+    }
+
+    Node<T>& operator=(const Node<T>& rhs);
+
+    void Display();
     void Insert(T a);
     std::vector<T> Walk();
 
 };
 
 template <class T>
-int Node<T>::DifferAt(T b) {
-
-    T cmp;
-    if (prefix.size() < b.size()) {
-	cmp = prefix;
-    } else {
-	cmp = b;
-    }
-
-    int idx = 0;
-    for (; idx<cmp.size(); ++idx) {
-	if (prefix[idx] != b[idx]) {
-	    break;
-	}
-    }
-
-    return idx;
+Node<T>& Node<T>::operator=(const Node<T>& rhs) {
+    prefix = rhs.prefix;
+    Nodes = rhs.Nodes;
+    return *this;
 }
 
 template <class T>
-int Node<T>::DifferAt(Node<T>::iter beg, Node<T>::iter end) {
+T Node<T>::DifferAt(Node<T>::iter beg) {
     auto nodebeg = prefix.begin();
-    int i = 0;
-    for (; nodebeg != prefix.end(); ++nodebeg) {
-	if (*beg == *nodebeg) {
-	    ++beg;
-	    ++i;
-	    continue;
-	}
-	break;
+    auto storeend = prefix.end();
+
+    auto storebeg = beg;
+
+    for (; (nodebeg != storeend) && (*beg == *nodebeg); ++nodebeg ) {
+	++beg;
     }
-    return i;
+    return T(storebeg, beg);
 }
 
 template <class T>
@@ -72,19 +69,26 @@ void Node<T>::Insert(T newitem) {
 template <class T>
 void Node<T>::Insert(Node<T>::iter beg, Node<T>::iter end) {
 
-    if (beg == end) {
-	return;
-    }
-
     for (auto nbeg = Nodes.begin(); nbeg != Nodes.end(); ++nbeg) {
-	int differ = nbeg->DifferAt(beg+prefix.size(), end);
-	if (differ > 0) {
-	    nbeg->Insert(beg+prefix.size()+differ, end);
+	
+	auto sub = nbeg->DifferAt(beg);
+	if (sub.size() > 0) {
+	    if (sub == nbeg->prefix) {
+		nbeg->Insert(beg+sub.size(),end);
+		return;
+	    }
+
+	    nbeg->prefix = T(nbeg->prefix.begin(),
+			     nbeg->prefix.begin()+sub.size());
+
+	    *nbeg = Node<T>(T(beg,beg+sub.size()), *nbeg);
+
+	    nbeg->Insert(beg,end);
 	    return;
 	}
     }
 
-    Nodes.push_back(Node<T>(T(beg+DifferAt(beg, end), end)));
+    Nodes.push_back(Node<T>(T(beg,end)));
 }
 
 template <class T>
@@ -92,8 +96,8 @@ std::vector<T> Node<T>::Walk() {
     std::vector<T> out;
     out.push_back(prefix);
 
-    for (auto nbeg = Nodes.begin(); nbeg != Nodes.end(); ++nbeg) {
-	nbeg->Walk(out);
+    for (auto beg = Nodes.begin(); beg != Nodes.end(); ++beg) {
+	beg->Walk(out);
     }
 
     return out;
@@ -102,48 +106,46 @@ std::vector<T> Node<T>::Walk() {
 template <class T>
 void Node<T>::Walk(std::vector<T> &out) {
     out.push_back(prefix);
-
+    
     for (auto beg = Nodes.begin(); beg != Nodes.end(); ++beg) {
 	beg->Walk(out);
     }
 }
 
-void PrintVec(std::vector<int> vec) {
-    std::cout << "[ ";
-    for (auto b = vec.begin(); b != vec.end(); ++b) {
-	std::cout << *b;
+template <class T>
+void Node<T>::Display() {
+
+    std::cout << "Prefix tree: " << prefix << std::endl;
+    for (auto b = Nodes.begin(); b != Nodes.end(); ++b) {
+	b->Display(1);
     }
-    std::cout << " ]" << std::endl;
 }
 
-int main() {
+template <class T>
+void Node<T>::Display(int level) {
+    std::cout << std::string(level, '\t') << prefix << std::endl;
+    for (auto b = Nodes.begin(); b != Nodes.end(); ++b) {
+	b->Display(level+1);
+    }
+}
+
+int main(int argc, char* argv[]) {
+
+    if (argc < 2) {
+	std::cout << "Please supply a file" << std::endl;
+    }
 
     Node<std::string> n;
 
-    n.Insert("HIIIII");
-    n.Insert("HIIIIIa");
-    n.Insert("HIIIIIaa");
-    n.Insert("HIIIIIaaa");
-    n.Insert("HIIIIIaaaa");
-    n.Insert("something");
+    std::ifstream infile(argv[1], std::ifstream::in);
 
-    auto t = n.Walk();
-    for (auto b = t.begin(); b != t.end(); ++b) {
-	std::cout << *b << std::endl;
+    while (!infile.eof()) {
+	std::string s;
+	std::getline(infile, s);
+	n.Insert(s);
     }
 
-    std::cout << n.Levels() << std::endl;
-
-    Node<std::vector<int>> vtrie;
-
-    vtrie.Insert({1,2,3,4,5});
-    vtrie.Insert({1,3,4,5,6});
-    vtrie.Insert({1,3,4,55,6});
-
-    std::vector<std::vector<int>> watr(vtrie.Walk());
-
-    for (auto b = watr.begin(); b != watr.end(); ++b) {
-	PrintVec(*b);
-    }
+    n.Display();
     return 0;
 }
+
