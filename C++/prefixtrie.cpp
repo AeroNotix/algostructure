@@ -16,6 +16,7 @@ private:
     void Insert(iter a, iter b);
     void Walk(std::vector<T> &out);
     void Display(int);
+    void Display(void (*fcn) (Node<T>, int));
     std::vector<Node<T> > Nodes;
     typename T::difference_type DifferAt(iter beg);
 
@@ -43,6 +44,7 @@ public:
     const Node<T>& operator=(const Node<T>& rhs);
 
     void Display();
+    void Display(void (*fcn) (Node<T>));
     void Insert(const T &a);
     std::vector<T> Walk();
 
@@ -59,7 +61,7 @@ typename T::difference_type Node<T>::DifferAt(Node<T>::iter beg) {
     auto storeend = prefix.end();
     auto storebeg = beg;
 
-    for (; (*beg == *nodebeg) && (nodebeg != storeend); ++nodebeg ) {
+    for (; (nodebeg != storeend) && (*beg == *nodebeg); ++nodebeg ) {
 	++beg;
     }
     return std::distance(storebeg, beg);
@@ -77,7 +79,7 @@ void Node<T>::Insert(Node<T>::iter beg, Node<T>::iter end) {
 	auto sub = nbeg->DifferAt(beg);
 	if (std::distance(beg,beg+sub) > 0) {
 
-	    std::string ssub = T(beg,beg+sub);
+	    T ssub = T(beg,beg+sub);
 
 	    if (ssub == nbeg->prefix) {
 		nbeg->Insert(beg+sub,end);
@@ -133,6 +135,15 @@ void Node<T>::Display(int level) {
     }
 }
 
+template <class T>
+void Node<T>::Display(void (*fcn) (Node<T>)) {
+    fcn(Nodes[0]);
+}
+
+template <class T>
+void Node<T>::Display(void (*fcn) (Node<T>, int)) {
+}
+
 int main(int argc, char* argv[]) {
 
     if (argc < 2) {
@@ -148,7 +159,5 @@ int main(int argc, char* argv[]) {
 	std::getline(infile, s);
 	n.Insert(s);
     }
-    
-    return 0;
 }
 
