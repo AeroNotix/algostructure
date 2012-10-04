@@ -33,9 +33,14 @@ public:
     }
 
     Node(iter a, iter b) :
-	prefix(a,b) {};
+	prefix(a,b) {
+	Nodes.reserve(26);
+    };
 
-    Node<T>& operator=(const Node<T>& rhs);
+    Node(const Node<T>& rhs) :
+	prefix(rhs.prefix), Nodes(rhs.Nodes) {};
+
+    const Node<T>& operator=(const Node<T>& rhs);
 
     void Display();
     void Insert(const T &a);
@@ -44,10 +49,8 @@ public:
 };
 
 template <class T>
-Node<T>& Node<T>::operator=(const Node<T>& rhs) {
-    prefix = rhs.prefix;
-    Nodes = rhs.Nodes;
-    return *this;
+const Node<T>& Node<T>::operator=(const Node<T>& rhs) {
+    return rhs;
 }
 
 template <class T>
@@ -56,7 +59,7 @@ typename T::difference_type Node<T>::DifferAt(Node<T>::iter beg) {
     auto storeend = prefix.end();
     auto storebeg = beg;
 
-    for (; (nodebeg != storeend) && (*beg == *nodebeg); ++nodebeg ) {
+    for (; (*beg == *nodebeg) && (nodebeg != storeend); ++nodebeg ) {
 	++beg;
     }
     return std::distance(storebeg, beg);
@@ -73,20 +76,22 @@ void Node<T>::Insert(Node<T>::iter beg, Node<T>::iter end) {
     for (auto nbeg = Nodes.begin(); nbeg != Nodes.end(); ++nbeg) {
 	auto sub = nbeg->DifferAt(beg);
 	if (std::distance(beg,beg+sub) > 0) {
-	    if (T(beg,beg+sub) == nbeg->prefix) {
+
+	    std::string ssub = T(beg,beg+sub);
+
+	    if (ssub == nbeg->prefix) {
 		nbeg->Insert(beg+sub,end);
 		return;
 	    }
 
-	    nbeg->prefix = T(nbeg->prefix.begin(),
-			     nbeg->prefix.begin()+sub);
+	    nbeg->prefix.assign(nbeg->prefix.begin(),
+				nbeg->prefix.begin()+sub);
 
-	    *nbeg = Node<T>(T(beg,beg+sub), *nbeg);
-	    nbeg->Insert(beg,end);
+	    *nbeg = Node<T>(ssub, *nbeg);
+	    nbeg->Insert(beg+sub,end);
 	    return;
 	}
     }
-
     Nodes.push_back(Node<T>(beg,end));
 }
 
@@ -138,12 +143,12 @@ int main(int argc, char* argv[]) {
 
     std::ifstream infile(argv[1], std::ifstream::in);
 
+    std::string s;
     while (!infile.eof()) {
-	std::string s;
 	std::getline(infile, s);
 	n.Insert(s);
     }
-
+    
     return 0;
 }
 

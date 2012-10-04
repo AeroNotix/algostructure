@@ -180,5 +180,4 @@ func main() {
 	for _, str := range strs {
 		root.Insert(str)
 	}
-
 }
