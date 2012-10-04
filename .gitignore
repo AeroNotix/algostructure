@@ -1,3 +1,4 @@
+callgrind.*
 *.exe
 *.out
 *.beam
