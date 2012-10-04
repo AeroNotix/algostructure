@@ -1,41 +1,44 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <stdexcept>
 #include <fstream>
+#include <iterator>
 
 template <class T>
 class Node {
 
 private:
-    typedef typename T::iterator iter;
+    typedef typename T::const_iterator iter;
     typedef typename T::difference_type difftype;
 
     T prefix;
-    int levels = 0;
 
     void Insert(iter a, iter b);
     void Walk(std::vector<T> &out);
     void Display(int);
     std::vector<Node<T> > Nodes;
-    T DifferAt(iter beg);
+    typename T::difference_type DifferAt(iter beg);
 
 public:
-    int Levels() const { return levels; };
-
     Node() {};
-    explicit Node(T pre) :
-	prefix(pre) {};
-
-    Node(T pre, Node<T> n) :
+    explicit Node(const T &pre) :
 	prefix(pre) {
+	Nodes.reserve(26);
+    };
+
+    Node(T pre, const Node<T> &n) :
+	prefix(pre) {
+	Nodes.reserve(26);
 	Nodes.push_back(n);
     }
+
+    Node(iter a, iter b) :
+	prefix(a,b) {};
 
     Node<T>& operator=(const Node<T>& rhs);
 
     void Display();
-    void Insert(T a);
+    void Insert(const T &a);
     std::vector<T> Walk();
 
 };
@@ -48,21 +51,19 @@ Node<T>& Node<T>::operator=(const Node<T>& rhs) {
 }
 
 template <class T>
-T Node<T>::DifferAt(Node<T>::iter beg) {
+typename T::difference_type Node<T>::DifferAt(Node<T>::iter beg) {
     auto nodebeg = prefix.begin();
     auto storeend = prefix.end();
-
     auto storebeg = beg;
 
     for (; (nodebeg != storeend) && (*beg == *nodebeg); ++nodebeg ) {
 	++beg;
     }
-    return T(storebeg, beg);
+    return std::distance(storebeg, beg);
 }
 
 template <class T>
-void Node<T>::Insert(T newitem) {
-    ++levels;
+void Node<T>::Insert(const T &newitem) {
     Insert(newitem.begin(), newitem.end());
 }
 
@@ -70,25 +71,23 @@ template <class T>
 void Node<T>::Insert(Node<T>::iter beg, Node<T>::iter end) {
 
     for (auto nbeg = Nodes.begin(); nbeg != Nodes.end(); ++nbeg) {
-	
 	auto sub = nbeg->DifferAt(beg);
-	if (sub.size() > 0) {
-	    if (sub == nbeg->prefix) {
-		nbeg->Insert(beg+sub.size(),end);
+	if (std::distance(beg,beg+sub) > 0) {
+	    if (T(beg,beg+sub) == nbeg->prefix) {
+		nbeg->Insert(beg+sub,end);
 		return;
 	    }
 
 	    nbeg->prefix = T(nbeg->prefix.begin(),
-			     nbeg->prefix.begin()+sub.size());
+			     nbeg->prefix.begin()+sub);
 
-	    *nbeg = Node<T>(T(beg,beg+sub.size()), *nbeg);
-
+	    *nbeg = Node<T>(T(beg,beg+sub), *nbeg);
 	    nbeg->Insert(beg,end);
 	    return;
 	}
     }
 
-    Nodes.push_back(Node<T>(T(beg,end)));
+    Nodes.push_back(Node<T>(beg,end));
 }
 
 template <class T>
@@ -145,7 +144,6 @@ int main(int argc, char* argv[]) {
 	n.Insert(s);
     }
 
-    n.Display();
     return 0;
 }
 
