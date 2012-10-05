@@ -11,13 +11,10 @@ private:
     typedef typename T::const_iterator iter;
     typedef typename T::difference_type difftype;
 
-    T prefix;
-
     void Insert(iter a, iter b);
     void Walk(std::vector<T> &out);
     void Display(int);
-    void Display(void (*fcn) (Node<T>, int));
-    std::vector<Node<T> > Nodes;
+    void Display(void (*fcn) (Node<T>), int level);
     typename T::difference_type DifferAt(iter beg);
 
 public:
@@ -27,7 +24,7 @@ public:
 	Nodes.reserve(26);
     };
 
-    Node(T pre, const Node<T> &n) :
+    Node(T &pre, const Node<T> &n) :
 	prefix(pre) {
 	Nodes.reserve(26);
 	Nodes.push_back(n);
@@ -41,19 +38,19 @@ public:
     Node(const Node<T>& rhs) :
 	prefix(rhs.prefix), Nodes(rhs.Nodes) {};
 
-    const Node<T>& operator=(const Node<T>& rhs);
+    const Node<T>& operator=(const Node<T>& rhs) {
+    return rhs;
+    }
 
     void Display();
     void Display(void (*fcn) (Node<T>));
     void Insert(const T &a);
     std::vector<T> Walk();
 
-};
+    T prefix;
+    std::vector<Node<T> > Nodes;
 
-template <class T>
-const Node<T>& Node<T>::operator=(const Node<T>& rhs) {
-    return rhs;
-}
+};
 
 template <class T>
 typename T::difference_type Node<T>::DifferAt(Node<T>::iter beg) {
@@ -77,23 +74,22 @@ void Node<T>::Insert(Node<T>::iter beg, Node<T>::iter end) {
 
     for (auto nbeg = Nodes.begin(); nbeg != Nodes.end(); ++nbeg) {
 	auto sub = nbeg->DifferAt(beg);
-	if (std::distance(beg,beg+sub) > 0) {
 
-	    T ssub = T(beg,beg+sub);
+	T ssub = T(beg,beg+sub);
 
-	    if (ssub == nbeg->prefix) {
-		nbeg->Insert(beg+sub,end);
-		return;
-	    }
+	if (ssub == nbeg->prefix) {
+	    nbeg->Insert(beg+sub,end);
+	    return;
+	}
 
-	    nbeg->prefix.assign(nbeg->prefix.begin(),
-				nbeg->prefix.begin()+sub);
-
+	if (ssub.size() > 0) {
+	    nbeg->prefix.assign(ssub);
 	    *nbeg = Node<T>(ssub, *nbeg);
 	    nbeg->Insert(beg+sub,end);
 	    return;
 	}
     }
+
     Nodes.push_back(Node<T>(beg,end));
 }
 
@@ -137,27 +133,27 @@ void Node<T>::Display(int level) {
 
 template <class T>
 void Node<T>::Display(void (*fcn) (Node<T>)) {
-    fcn(Nodes[0]);
+    std::cout << "Prefix tree: ";
+    fcn(*this);
+    std::cout << std::endl;
+
+    for (auto seg : Nodes)
+	seg.Display(fcn, 1);
 }
 
 template <class T>
-void Node<T>::Display(void (*fcn) (Node<T>, int)) {
+void Node<T>::Display(void (*fcn) (Node<T>), int level) {
+    std::cout << std::string(level, '\t');
+    std::cout << ".";
+    fcn(*this);
+    std::cout << std::endl;
+    for (auto seg : Nodes)
+	seg.Display(fcn, level+1);
 }
 
 int main(int argc, char* argv[]) {
 
-    if (argc < 2) {
-	std::cout << "Please supply a file" << std::endl;
-    }
-
     Node<std::string> n;
-
-    std::ifstream infile(argv[1], std::ifstream::in);
-
-    std::string s;
-    while (!infile.eof()) {
-	std::getline(infile, s);
-	n.Insert(s);
-    }
+    n.Display();
+    return 0;
 }
-

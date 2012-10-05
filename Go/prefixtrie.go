@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
 	"strings"
 )
 
@@ -166,18 +164,16 @@ func MapWithPrefix(m map[string]bool, s string) []string {
 }
 
 func main() {
-	fin, err := os.Open(os.Args[1])
-	if err != nil {
-		fmt.Println(err)
-	}
-	fdata, err := ioutil.ReadAll(fin)
-	if err != nil {
-		fmt.Println(err)
-	}
-	strs := strings.Split(string(fdata), "\n")
 
 	root := &Node{}
+	strs := []string{
+		"Hello",
+		"Helli",
+		"Helgi",
+		"Buttons",
+	}
 	for _, str := range strs {
 		root.Insert(str)
 	}
+	fmt.Println(root)
 }
