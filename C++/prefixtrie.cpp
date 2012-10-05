@@ -20,26 +20,16 @@ private:
 public:
     Node() {};
     explicit Node(const T &pre) :
-	prefix(pre) {
-	Nodes.reserve(26);
-    };
+	prefix(pre) {};
 
-    Node(T &pre, const Node<T> &n) :
-	prefix(pre) {
-	Nodes.reserve(26);
-	Nodes.push_back(n);
-    }
+    explicit Node(T &pre, const Node<T> &n) :
+	prefix(pre), Nodes(1,n) {};
 
-    Node(iter a, iter b) :
-	prefix(a,b) {
-	Nodes.reserve(26);
-    };
-
-    Node(const Node<T>& rhs) :
-	prefix(rhs.prefix), Nodes(rhs.Nodes) {};
+    explicit Node(iter a, iter b) :
+	prefix(a,b) {};
 
     const Node<T>& operator=(const Node<T>& rhs) {
-    return rhs;
+	return rhs;
     }
 
     void Display();
@@ -154,6 +144,17 @@ void Node<T>::Display(void (*fcn) (Node<T>), int level) {
 int main(int argc, char* argv[]) {
 
     Node<std::string> n;
-    n.Display();
+
+    if (argc < 2) {
+	std::cout << "Please supply a file" << std::endl;
+    }
+
+    std::ifstream infile(argv[1], std::ifstream::in);
+
+    std::string s;
+    while (!infile.eof()) {
+	std::getline(infile, s);
+	n.Insert(s);
+    }
     return 0;
 }
