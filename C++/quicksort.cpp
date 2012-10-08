@@ -54,6 +54,5 @@ int main() {
     }
 
     quicksort(v);
-
     return 0;
 }

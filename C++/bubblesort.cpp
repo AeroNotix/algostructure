@@ -36,6 +36,5 @@ int main() {
     }
     
     bubblesort(v);
-
     return 0;
 }
