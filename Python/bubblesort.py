@@ -1,10 +1,8 @@
 import random
 import sys
 
-sys.setrecursionlimit(20000000)
-
-
 def bubblesort(vec):
+    sys.setrecursionlimit(len(vec))
     idx = 2
     swapped = False
     while (idx < len(vec)):
@@ -17,7 +15,7 @@ def bubblesort(vec):
 
 if __name__ == '__main__':
     vec = []
-    for x in range(1000000):
+    for x in range(1000):
         vec.append(random.randint(0,x))
     
     bubblesort(vec)
