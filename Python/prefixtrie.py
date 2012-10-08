@@ -10,7 +10,7 @@ class Node(object):
     def Insert(self, iterable):
 
         for node in self.nodes:
-            ok, sub = self.commonPrefix(iterable)
+            ok, sub = node.commonPrefix(iterable)
             if ok:
                 if sub == node.prefix:
                     node.Insert(iterable[len(sub):])
@@ -24,6 +24,7 @@ class Node(object):
 
     def commonPrefix(self, other):
 
+        idx = 0
         # control variables leak their scope remember
         for idx, element in enumerate(self.prefix):
             if idx > len(other)-1:
@@ -43,7 +44,8 @@ class Node(object):
             node.display(msg="node: ", level=level+1)
             
 if __name__ == '__main__':
-    n = Node(prefix="some")
+    n = Node()
+    n.Insert("some") 
     n.Insert("tits")
     n.Insert("something")
     n.Insert("someone")
