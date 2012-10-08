@@ -46,10 +46,14 @@ T quicksort(T vec) {
 }
 
 int main() {
-    std::vector<int> v {8,2,31,4,44,6,51,8,66,10,11,2};
-    for (auto el : quicksort(v)) {
-	std::cout << el << " ";
+
+    std::vector<int> v;
+
+    for (int x = 0; x < 1000000; ++x) {
+	v.push_back(rand() % 1000000);
     }
-    std::cout << std::endl;
+
+    quicksort(v);
+
     return 0;
 }
