@@ -1,9 +1,7 @@
 class Node(object):
 
-    def __init__(self, prefix='', left=None, right=None, nodes=None):
+    def __init__(self, prefix='', nodes=None):
         self.prefix = prefix
-        self.left = left
-        self.right = right
         if nodes is None:
             self.nodes = []
         else:
