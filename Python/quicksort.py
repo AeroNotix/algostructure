@@ -13,7 +13,7 @@ def quicksort(vec):
     lesser = []
     greater = []
 
-    vec = vec[:middlepos]+vec[middlepos+1:]
+    vec.pop(middlepos)
 
     for el in vec:
         if el <= middle:
