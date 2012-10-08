@@ -3,3 +3,5 @@ callgrind.*
 *.out
 *.beam
 *.dump
+bsort
+qsort
