@@ -48,5 +48,9 @@ class Node(object):
 if __name__ == '__main__':
     n = Node()
 
+    if len(sys.argv) < 2:
+        print "Please supply a file"
+        exit(-1)
+
     for line in open(sys.argv[1]):
         n.Insert(line)
