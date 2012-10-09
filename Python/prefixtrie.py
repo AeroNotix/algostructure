@@ -11,6 +11,16 @@ class Node(object):
 
     def Insert(self, iterable):
 
+        if not len(self.nodes):
+            return self._insert(iterable)
+
+        if not isinstance(iterable, type(self.nodes[0].prefix)):
+            raise TypeError
+
+        return self._insert(iterable)
+
+    def _insert(self, iterable):
+
         for idx, node in enumerate(self.nodes):
             ok, sub = node.commonPrefix(iterable)
             if ok:
@@ -46,11 +56,11 @@ class Node(object):
             node.display(msg="node: ", level=level+1)
             
 if __name__ == '__main__':
-    n = Node()
+    ROOT = Node()
 
     if len(sys.argv) < 2:
         print "Please supply a file"
         exit(-1)
 
     for line in open(sys.argv[1]):
-        n.Insert(line)
+        ROOT.Insert(line)
