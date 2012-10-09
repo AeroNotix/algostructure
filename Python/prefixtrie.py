@@ -1,3 +1,5 @@
+import sys
+
 class Node(object):
 
     def __init__(self, prefix='', nodes=None):
@@ -9,15 +11,15 @@ class Node(object):
 
     def Insert(self, iterable):
 
-        for node in self.nodes:
+        for idx, node in enumerate(self.nodes):
             ok, sub = node.commonPrefix(iterable)
             if ok:
                 if sub == node.prefix:
                     node.Insert(iterable[len(sub):])
                     return
+
                 node.prefix = node.prefix[len(sub):]
-                node = Node(prefix=sub,nodes=node)
-                node.Insert(iterable[len(sub):])
+                self.nodes[idx] = Node(prefix=sub, nodes=node)
                 return
 
         self.nodes.append(Node(prefix=iterable))
@@ -45,9 +47,6 @@ class Node(object):
             
 if __name__ == '__main__':
     n = Node()
-    n.Insert("some") 
-    n.Insert("tits")
-    n.Insert("something")
-    n.Insert("someone")
-    
-    n.display()
+
+    for line in open(sys.argv[1]):
+        n.Insert(line)
