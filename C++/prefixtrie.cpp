@@ -13,7 +13,7 @@ private:
 
     void Insert(iter a, iter b);
     void Walk(std::vector<T> &out);
-    void Display(int);
+    void Display(int) const;
     void Display(void (*fcn) (Node<T>), int level);
     typename T::difference_type DifferAt(iter beg);
 
@@ -29,10 +29,12 @@ public:
 	prefix(a,b) {};
 
     const Node<T>& operator=(const Node<T>& rhs) {
-	return rhs;
+	this->prefix = rhs.prefix;
+	this->Nodes = rhs.Nodes;
+	return *this;
     }
 
-    void Display();
+    void Display() const;
     void Display(void (*fcn) (Node<T>));
     void Insert(const T &a);
     std::vector<T> Walk();
@@ -57,6 +59,7 @@ typename T::difference_type Node<T>::DifferAt(Node<T>::iter beg) {
 template <class T>
 void Node<T>::Insert(const T &newitem) {
     Insert(newitem.begin(), newitem.end());
+
 }
 
 template <class T>
@@ -66,16 +69,13 @@ void Node<T>::Insert(Node<T>::iter beg, Node<T>::iter end) {
 	auto sub = nbeg->DifferAt(beg);
 
 	T ssub = T(beg,beg+sub);
-
-	if (ssub == nbeg->prefix) {
-	    nbeg->Insert(beg+sub,end);
-	    return;
-	}
-
 	if (ssub.size() > 0) {
-	    nbeg->prefix.assign(ssub);
+	    if (ssub == nbeg->prefix) {
+		nbeg->Insert(beg+sub,end);
+		return;
+	    }
+	    nbeg->prefix = T(nbeg->prefix.begin()+sub,nbeg->prefix.end());
 	    *nbeg = Node<T>(ssub, *nbeg);
-	    nbeg->Insert(beg+sub,end);
 	    return;
 	}
     }
@@ -105,7 +105,7 @@ void Node<T>::Walk(std::vector<T> &out) {
 }
 
 template <class T>
-void Node<T>::Display() {
+void Node<T>::Display() const {
 
     std::cout << "Prefix tree: " << prefix << std::endl;
     for (auto b = Nodes.begin(); b != Nodes.end(); ++b) {
@@ -114,7 +114,7 @@ void Node<T>::Display() {
 }
 
 template <class T>
-void Node<T>::Display(int level) {
+void Node<T>::Display(int level) const {
     std::cout << std::string(level, '\t') << prefix << std::endl;
     for (auto b = Nodes.begin(); b != Nodes.end(); ++b) {
 	b->Display(level+1);
@@ -156,5 +156,6 @@ int main(int argc, char* argv[]) {
 	std::getline(infile, s);
 	n.Insert(s);
     }
+
     return 0;
 }
