@@ -1,4 +1,7 @@
+#ifndef BTREEINC
 #include <binarytree.h>
+#define BTREEINC
+#endif
 
 template <class T>
 BinaryTree<T>::BinaryTree()

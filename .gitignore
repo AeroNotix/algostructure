@@ -5,3 +5,4 @@ callgrind.*
 *.dump
 bsort
 qsort
+build/*
