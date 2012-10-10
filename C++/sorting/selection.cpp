@@ -22,16 +22,3 @@ void selectionSort(T &vec) {
 	swap(*begin, *current);
     }
 }
-
-
-int main() {
-    
-    std::vector<int> v;
-
-    for (int x = 0; x < 100000; ++x) {
-	v.push_back(rand() % 1000000);
-    }
-    
-    selectionSort(v);
-    return 0;
-}

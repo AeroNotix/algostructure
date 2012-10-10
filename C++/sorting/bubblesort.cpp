@@ -26,15 +26,3 @@ void bubblesort(T& vec) {
 	bubblesort(vec);
     }
 }
-
-int main() {
-
-    std::vector<int> v;
-
-    for (int x = 0; x < 1000000; ++x) {
-	v.push_back(rand() % 1000000);
-    }
-    
-    bubblesort(v);
-    return 0;
-}

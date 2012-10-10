@@ -44,15 +44,3 @@ T quicksort(T vec) {
 
     return out;
 }
-
-int main() {
-
-    std::vector<int> v;
-
-    for (int x = 0; x < 1000000; ++x) {
-	v.push_back(rand() % 1000000);
-    }
-
-    quicksort(v);
-    return 0;
-}
