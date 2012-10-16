@@ -7,3 +7,5 @@ bsort
 qsort
 build/*
 *.o
+*/build/*
+*build*
