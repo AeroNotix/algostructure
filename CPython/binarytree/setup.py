@@ -5,7 +5,9 @@ ROOT = os.path.dirname(__file__)
 
 module1 = Extension(
     'binarytree',
-    include_dirs = [os.path.realpath(os.path.join(ROOT, os.pardir, os.pardir, "C++", "binarytree"))],
+    include_dirs = [
+        os.path.join(ROOT, os.pardir, os.pardir, "C++", "binarytree"),
+        ],
     sources = ['binarytree.cpp'],
     extra_compile_args = ['-std=c++11']
     )

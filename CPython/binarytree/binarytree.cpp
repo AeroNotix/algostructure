@@ -3,8 +3,8 @@
 #include "binarytree.h"
 
 static PyObject* binarytree_newtree(PyObject* self, PyObject *args) {
-    BinaryTree<PyObject*> n = BinaryTree<PyObject*>();
-    std::cout << "Hello, lulz" << std::endl;
+	binarytree::BinaryTree<PyObject*> *n = new binarytree::BinaryTree<PyObject*>();
+	std::cout << "Hello, lulz" << std::endl;
     Py_RETURN_NONE;
 }
 
@@ -16,4 +16,3 @@ static PyMethodDef binarytree_funcs[] = {
 PyMODINIT_FUNC initbinarytree(void) {
     Py_InitModule3("binarytree", binarytree_funcs, "Binary Tree wrapper module over a C++11 lib.");
 }
-
