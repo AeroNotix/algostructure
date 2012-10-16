@@ -41,6 +41,5 @@ static PyMethodDef quicksort_funcs[] = {
 };
 
 PyMODINIT_FUNC initquicksort(void) {
-    Py_InitModule3("quicksort", quicksort_funcs, "test");
+    Py_InitModule3("quicksort", quicksort_funcs, "Quicksort wrapper module over a C++11 lib.");
 }
-
