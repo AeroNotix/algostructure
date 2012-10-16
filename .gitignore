@@ -9,3 +9,4 @@ build/*
 *.o
 */build/*
 *build*
+*.so
