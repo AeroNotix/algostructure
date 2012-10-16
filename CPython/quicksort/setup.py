@@ -1,8 +1,11 @@
 from distutils.core import setup, Extension
+import os
+
+ROOT = os.path.dirname(__file__)
 
 module1 = Extension(
     'quicksort',
-    include_dirs = ['/home/aero/algostructure/C++/sorting'],
+    include_dirs = [os.path.join(ROOT, "../../C++/sorting/")],
     sources = ['quicksort.cpp'],
     extra_compile_args = ['-std=c++11']
     )
