@@ -6,3 +6,4 @@ callgrind.*
 bsort
 qsort
 build/*
+*.o
