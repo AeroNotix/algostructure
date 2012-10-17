@@ -7,3 +7,6 @@ build:
 
 clean:
 	rm -r build/
+
+test:
+	python2 btreetest.py
