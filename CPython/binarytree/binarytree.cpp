@@ -9,8 +9,6 @@ typedef struct {
 } BinaryTree_obj;
 
 static void BinaryTree_dealloc(BinaryTree_obj *self) {
-    for (auto el : self->btree.Walk())
-	Py_XDECREF(el);
     self->btree.~BinaryTree();
 }
 

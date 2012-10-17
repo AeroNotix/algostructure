@@ -9,7 +9,7 @@ module1 = Extension(
         os.path.join(ROOT, os.pardir, os.pardir, "C++", "binarytree"),
         ],
     sources = ['binarytree.cpp'],
-    extra_compile_args = ['-std=c++11']
+    extra_compile_args = ['-std=c++11','-O3']
     )
 
 setup(
