@@ -5,23 +5,22 @@
 
 typedef struct {
     PyObject_HEAD
-    binarytree::BinaryTree<PyObject*> btree;
+    binarytree::BinaryTree<PyObject*> *btree;
 } BinaryTree_obj;
 
 static void BinaryTree_dealloc(BinaryTree_obj *self) {
     self->btree.~BinaryTree();
 }
 
-static PyObject* BinaryTree_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
+bool BinaryTree_intCMP(PyObject *left, PyObject *right) {
+    int l = PyInt_AsLong(left);
+    int r = PyInt_AsLong(right);
+    return l < r;
+}
 
-    BinaryTree_obj *self;
-
-    binarytree::BinaryTree<PyObject*> tmp = binarytree::BinaryTree<PyObject*>();
-    self->btree = tmp;
-    self = (BinaryTree_obj*) type->tp_alloc(type, 0);
-    if (!self)
-	return NULL;
-    return (PyObject*) self;
+static PyObject* BinaryTree_new(BinaryTree_obj *self, PyObject *args, PyObject *kwds) {
+    binarytree::BinaryTree<PyObject*> (self->btree) = new binarytree::BinaryTree<PyObject*>(BinaryTree_intCMP);
+    return 0;
 }
 
 PyObject* BinaryTree_ToString(PyObject *self) {
@@ -33,12 +32,12 @@ static PyObject* BinaryTree_add(BinaryTree_obj *self, PyObject *args) {
     if (!PyArg_ParseTuple(args, "O", &obj)) {
 	return NULL;
     }
-    self->btree.Add(obj);
+    self->btree->Add(obj);
     Py_RETURN_NONE;
 }
 
 static PyObject* BinaryTree_walk(BinaryTree_obj *self) {
-    auto sortedItems = self->btree.Walk();
+    auto sortedItems = self->btree->Walk();
     PyObject *list = PyList_New(0);
     for (auto el : sortedItems) {
 	if (PyList_Append(list, el) == -1) {
@@ -91,9 +90,9 @@ static PyTypeObject BinaryTreeType = {
     0,                                    /* tp_descr_get */
     0,                                    /* tp_descr_set */
     0,                                    /* tp_dictoffset */
-    0,                                    /* tp_init */
+    (initproc) BinaryTree_new,            /* tp_init */
     0,                                    /* tp_alloc */
-    BinaryTree_new,                       /* tp_new */
+    0,                                    /* tp_new */
 };
 
 static PyMethodDef binarytree_funcs[] = {

@@ -37,11 +37,13 @@ namespace binarytree {
 
     public:
 	BinaryTree();
+	BinaryTree(bool (*f) (T,T));
 	~BinaryTree();
 	void Add(T);
 	vector<T> Walk() const;
 	unsigned int Levels() const;
 	string ToString() const;
+	bool (*fcn) (T, T);
 
     private:
 	unsigned int levels;
@@ -51,9 +53,13 @@ namespace binarytree {
     };
 
     template <class T>
+    BinaryTree<T>::BinaryTree(bool (*f) (T,T))
+	: fcn(f), root(nullptr), levels(0) {
+    }
+
+    template <class T>
     BinaryTree<T>::BinaryTree()
 	: root(nullptr), levels(0) {
-	std::cout << "in ctor" << std::endl;
     }
 
     template <class T>
@@ -69,13 +75,22 @@ namespace binarytree {
     template <class T>
     void BinaryTree<T>::Add(T i) {
 	levels++;
+
 	if (root == nullptr) {
 	    root = NewNode<T>(i);
 	    return;
 	}
 
-	if (root->Value < i) {
-	    return add(i, root->Right);
+	if (fcn != NULL) {
+	    std::cout << "Using fcnptr" << std::endl;
+	    if (fcn(root->Value, i)) {
+		return add(i, root->Right);
+	    }
+	} else {
+	    std::cout << "Using nml comp" << std::endl;
+	    if (root->Value < i) {
+		return add(i, root->Right);
+	    }
 	}
 	add(i, root->Left);
 	return;
