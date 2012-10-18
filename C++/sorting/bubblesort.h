@@ -1,13 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
-
-template <typename T>
-void swap(T& a, T& b) {
-    T tmp = b;
-    b = a;
-    a = tmp;    
-}
+#include "sortutils.h"
 
 template <typename T>
 T bubblesort(T& vec) {
