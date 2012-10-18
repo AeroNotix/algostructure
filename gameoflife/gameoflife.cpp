@@ -45,47 +45,22 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 			}
 
 			int aliveN = 0;
-			int deadN = 0;
-			if (!board[x-1][y+1]) {
-				deadN++;
-			} else {
+			if (board[x-1][y+1])
 				aliveN++;
-			}
-			if (!board[x][y+1]) {
-				deadN++;
-			} else {
+			if (board[x][y+1])
 				aliveN++;
-			}
-			if (!board[x+1][y+1]) {
-				deadN++;
-			} else {
+			if (board[x+1][y+1])
 				aliveN++;
-			}
-			if (!board[x+1][y]) {
-				deadN++;
-			} else {
+			if (board[x+1][y])
 				aliveN++;
-			}
-			if (!board[x+1][y-1]) {
-				deadN++;
-			} else {
+			if (board[x+1][y-1])
 				aliveN++;
-			}
-			if (!board[x][y-1]) {
-				deadN++;
-			} else {
+			if (board[x][y-1])
 				aliveN++;
-			}
-			if (!board[x-1][y-1]) {
-				deadN++;
-			} else {
+			if (board[x-1][y-1])
 				aliveN++;
-			}
-			if (!board[x-1][y]) {
-				deadN++;
-			} else {
+			if (board[x-1][y])
 				aliveN++;
-			}
 			/*
 			  Rules
 			  =====
