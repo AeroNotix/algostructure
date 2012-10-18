@@ -2,16 +2,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define HEIGHT 5
+#define HEIGHT 30
 #define WIDTH 30
 #define UPDATELENGTH 150000
 
 int board[HEIGHT][WIDTH];
+int weightedarray[10] = {0,0,0,0,0,0,0,0,1};
 
 void genBoard(int (board)[HEIGHT][WIDTH]) {
     for (int x = 0; x < HEIGHT; ++x) {
 	for (int y = 0; y < WIDTH; ++y) {
-	    board[x][y] = rand() % 2;
+	    board[x][y] = weightedarray[rand() % 10];
 	}
     }
 }
@@ -114,8 +115,8 @@ int main() {
     genBoard(board);
     while (1) {
 	updateBoard(board);
-	usleep(UPDATELENGTH);
 	drawBoard(board);
+	usleep(UPDATELENGTH);
     }
     return 0;
 }
