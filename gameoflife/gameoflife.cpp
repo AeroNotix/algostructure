@@ -18,7 +18,17 @@ void genBoard(int (board)[HEIGHT][WIDTH]) {
     }
 }
 
+void copyBoard(int (newB)[HEIGHT][WIDTH], int (oldB)[HEIGHT][WIDTH]) {
+    for (int x = 0; x < HEIGHT; ++x) {
+	for (int y = 0; y < WIDTH; ++y) {
+	    newB[x][y] = oldB[x][y];
+	}
+    }
+}
+
 void updateBoard(int (board)[HEIGHT][WIDTH]) {
+    int next_board[HEIGHT][WIDTH];
+    copyBoard(next_board, board);
     for (int x = 0; x < HEIGHT; ++x) {
 	for (int y = 0; y < WIDTH; ++y) {
 
@@ -86,21 +96,22 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 	         becomes a live cell, as if by reproduction.
 	    */
 	    if ((board[x][y] && aliveN < 2)) {
-		board[x][y] = 0;
+		next_board[x][y] = 0;
 		continue;
 	    }
 	    if ((board[x][y]) && ((aliveN == 2) || (aliveN == 3)))
 		continue;
 	    if ((board[x][y]) && (aliveN > 3)) {
-		board[x][y] = 0;
+		next_board[x][y] = 0;
 		continue;
 	    }
 	    if ((!board[x][y]) && (aliveN == 3)) {
-		board[x][y] = 1;
+		next_board[x][y] = 1;
 		continue;
 	    }
 	}
     }
+    copyBoard(board, next_board);
 }
 
 void drawBoard(int (board)[HEIGHT][WIDTH]) {
