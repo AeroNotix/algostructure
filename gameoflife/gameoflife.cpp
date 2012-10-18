@@ -77,17 +77,17 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 			  4. Any dead cell with exactly three live neighbours
 			  becomes a live cell, as if by reproduction.
 			*/
-			if ((board[x][y] && aliveN < 2)) {
+			if (board[x][y] == 1 && aliveN < 2) {
 				next_board[x][y] = 0;
 				continue;
 			}
-			if ((board[x][y]) && ((aliveN == 2) || (aliveN == 3)))
+			if (board[x][y] == 1 && (aliveN == 2 || aliveN == 3))
 				continue;
-			if ((board[x][y]) && (aliveN > 3)) {
+			if (board[x][y] == 1 && aliveN > 3) {
 				next_board[x][y] = 0;
 				continue;
 			}
-			if ((!board[x][y]) && (aliveN == 3)) {
+			if (!board[x][y] == 1 && aliveN == 3) {
 				next_board[x][y] = 1;
 				continue;
 			}
