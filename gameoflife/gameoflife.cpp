@@ -8,7 +8,7 @@
 
 int board[HEIGHT][WIDTH];
 
-int weightedarray[10] = {0,0,0,0,0,0,0,0,1};
+int weightedarray[10] = {0,0,0,0,0,0,0,1,1};
 
 void genBoard(int (board)[HEIGHT][WIDTH]) {
     for (int x = 0; x < HEIGHT; ++x) {
