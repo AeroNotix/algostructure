@@ -5,7 +5,7 @@
 
 #define HEIGHT 80
 #define WIDTH 180
-#define UPDATELENGTH 100000
+#define UPDATELENGTH 150000
 #define ALIVE '*'
 #define DEAD ' '
 
@@ -17,33 +17,33 @@ void genBoard(int (board)[HEIGHT][WIDTH]) {
 
 	std::ifstream ifs ("/dev/urandom", std::ifstream::in);
 
-    for (int x = 0; x < HEIGHT; ++x) {
+	for (int x = 0; x < HEIGHT; ++x) {
 		for (int y = 0; y < WIDTH; ++y) {
 			board[x][y] = weightedarray[(int) ifs.get() % 10];
 		}
-    }
+	}
 	ifs.close();
 }
 
 void copyBoard(int (newB)[HEIGHT][WIDTH], int (oldB)[HEIGHT][WIDTH]) {
-    for (int x = 0; x < HEIGHT; ++x) {
+	for (int x = 0; x < HEIGHT; ++x) {
 		for (int y = 0; y < WIDTH; ++y) {
 			newB[x][y] = oldB[x][y];
 		}
-    }
+	}
 }
 
 void updateBoard(int (board)[HEIGHT][WIDTH]) {
-    int next_board[HEIGHT][WIDTH];
-    copyBoard(next_board, board);
-    for (int x = 0; x < HEIGHT; ++x) {
+	int next_board[HEIGHT][WIDTH];
+	copyBoard(next_board, board);
+	for (int x = 0; x < HEIGHT; ++x) {
 		for (int y = 0; y < WIDTH; ++y) {
 
 			if ((x == 0 || x == HEIGHT) ||
 				(y == 0 || y == WIDTH)) {
 				continue;
 			}
-			
+
 			int aliveN = 0;
 			int deadN = 0;
 			if (!board[x-1][y+1]) {
@@ -117,13 +117,13 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 				continue;
 			}
 		}
-    }
-    copyBoard(board, next_board);
+	}
+	copyBoard(board, next_board);
 }
 
 void drawBoard(int (board)[HEIGHT][WIDTH]) {
-    std::cout << "\033[2J\033[1;1H";
-    for (int x = 0; x < HEIGHT; ++x) {
+	std::cout << "\033[2J\033[1;1H";
+	for (int x = 0; x < HEIGHT; ++x) {
 		for (int y = 0; y < WIDTH; ++y) {
 			if (board[x][y] == 0) {
 				std::cout << DEAD;
@@ -132,16 +132,16 @@ void drawBoard(int (board)[HEIGHT][WIDTH]) {
 			}
 		}
 		std::cout << std::endl;
-    }
+	}
 }
 
 
 int main() {
-    genBoard(board);
-    while (1) {
+	genBoard(board);
+	while (1) {
 		updateBoard(board);
 		drawBoard(board);
 		usleep(UPDATELENGTH);
-    }
-    return 0;
+	}
+	return 0;
 }
