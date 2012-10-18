@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define HEIGHT 30
-#define WIDTH 30
+#define HEIGHT 50
+#define WIDTH 50
 #define UPDATELENGTH 150000
 
 int board[HEIGHT][WIDTH];
+
 int weightedarray[10] = {0,0,0,0,0,0,0,0,1};
 
 void genBoard(int (board)[HEIGHT][WIDTH]) {
@@ -20,6 +21,12 @@ void genBoard(int (board)[HEIGHT][WIDTH]) {
 void updateBoard(int (board)[HEIGHT][WIDTH]) {
     for (int x = 0; x < HEIGHT; ++x) {
 	for (int y = 0; y < WIDTH; ++y) {
+
+	    if ((x == 0 || x == HEIGHT) ||
+		(y == 0 || y == WIDTH)) {
+		continue;
+	    }
+
 	    int aliveN = 0;
 	    int deadN = 0;
 	    if (!board[x-1][y+1]) {
