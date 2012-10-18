@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <stdio.h>
-#include <Python.h>
 #include <sstream>
 
 using namespace std;
@@ -54,8 +53,7 @@ namespace binarytree {
 
     template <class T>
     BinaryTree<T>::BinaryTree(bool (*f) (T,T))
-	: fcn(f), root(nullptr), levels(0) {
-    }
+	: fcn(f), root(nullptr), levels(0) {}
 
     template <class T>
     BinaryTree<T>::BinaryTree()
@@ -82,28 +80,33 @@ namespace binarytree {
 	}
 
 	if (fcn != NULL) {
-	    std::cout << "Using fcnptr" << std::endl;
 	    if (fcn(root->Value, i)) {
 		return add(i, root->Right);
 	    }
 	} else {
-	    std::cout << "Using nml comp" << std::endl;
 	    if (root->Value < i) {
 		return add(i, root->Right);
 	    }
 	}
-	add(i, root->Left);
-	return;
+	return add(i, root->Left);
     }
 
     template <class T>
     void BinaryTree<T>::add(T i, Tree<T>* &leaf) {
+
 	if (leaf == nullptr) {
 	    leaf = NewNode<T>(i);
 	    return;
 	}
-	if (leaf->Value < i) {
-	    return add(i, leaf->Right);
+
+	if (fcn != NULL) {
+	    if (fcn(leaf->Value, i)) {
+		return add(i, leaf->Right);
+	    }
+	} else {
+	    if (leaf->Value < i) {
+		return add(i, leaf->Right);
+	    }
 	}
 	return add(i, leaf->Left);
     }
