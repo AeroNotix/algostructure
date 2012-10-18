@@ -1,6 +1,9 @@
 import random
+import sys
 import time
 import binarytree
+
+sys.setrecursionlimit(2000000)
 
 class BinaryTree(object):
 
@@ -16,28 +19,28 @@ class BinaryTree(object):
             self.value = element
             return
 
-        if element < self.value:
-            self.right.add(element)
-            return
         if element > self.value:
-            self.left.add(element)
-            return
+            return self.right.add(element)
+        return self.left.add(element)
     
-    def walk(self):
+    def walk(self, li=None):
+        if li is None:
+            li = []
         if not self.value:
-            return
+            return li
         if self.left:
-            self.left.walk()
-        print self.value
+            self.left.walk(li)
+        li.append(self.value)
         if self.right:
-            self.right.walk()
+            self.right.walk(li)
+        return li
 
 purepython = BinaryTree()
 wrapper = binarytree.BinaryTree()
 
 els = []
-for x in range(100):
-    els.append(random.randint(x,x))
+for x in range(500000):
+    els.append(random.randint(1,1000))
 '''
 t1 = time.clock()
 for el in els:
@@ -45,11 +48,8 @@ for el in els:
 print time.clock() - t1
 '''
 t2 = time.clock()
-wrapper.add(0)
 for el in els:
     wrapper.add(el)
 print time.clock() - t2
 
-li = wrapper.walk()
-li.sort()
-print li
+print purepython.walk() == wrapper.walk()

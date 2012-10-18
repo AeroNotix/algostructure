@@ -5,7 +5,7 @@
 
 typedef struct {
     PyObject_HEAD
-    binarytree::BinaryTree<PyObject*> *btree;
+    binarytree::BinaryTree<PyObject*> btree;
 } BinaryTree_obj;
 
 static void BinaryTree_dealloc(BinaryTree_obj *self) {
@@ -19,7 +19,8 @@ bool BinaryTree_intCMP(PyObject *left, PyObject *right) {
 }
 
 static PyObject* BinaryTree_new(BinaryTree_obj *self, PyObject *args, PyObject *kwds) {
-    binarytree::BinaryTree<PyObject*> (self->btree) = new binarytree::BinaryTree<PyObject*>(BinaryTree_intCMP);
+    binarytree::BinaryTree<PyObject*> tmp(BinaryTree_intCMP);
+    (self->btree) = tmp;
     return 0;
 }
 
@@ -32,12 +33,12 @@ static PyObject* BinaryTree_add(BinaryTree_obj *self, PyObject *args) {
     if (!PyArg_ParseTuple(args, "O", &obj)) {
 	return NULL;
     }
-    self->btree->Add(obj);
+    self->btree.Add(obj);
     Py_RETURN_NONE;
 }
 
 static PyObject* BinaryTree_walk(BinaryTree_obj *self) {
-    auto sortedItems = self->btree->Walk();
+    auto sortedItems = self->btree.Walk();
     PyObject *list = PyList_New(0);
     for (auto el : sortedItems) {
 	if (PyList_Append(list, el) == -1) {
