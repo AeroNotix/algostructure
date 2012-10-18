@@ -10,7 +10,7 @@ void swap(T& a, T& b) {
 }
 
 template <typename T>
-void bubblesort(T& vec) {
+T bubblesort(T& vec) {
     auto f = vec.begin();
     auto s = vec.begin();
     ++s;
@@ -25,4 +25,5 @@ void bubblesort(T& vec) {
     if (swapped) {
 	bubblesort(vec);
     }
+    return vec;
 }
