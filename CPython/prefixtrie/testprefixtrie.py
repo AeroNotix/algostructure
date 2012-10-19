@@ -1,9 +1,13 @@
+import sys
 import prefixtrie
 
-p = prefixtrie.PrefixTrie("")
-p.insert("something")
-p.insert("somethingelse")
-p.insert("somethingnew")
-p.insert("somethingelsenew")
+p = prefixtrie.PrefixTrie("S")
 
-p.walk()
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print "Please supply a file"
+        sys.exit(-1)
+
+    fname = open(sys.argv[1], "rb")
+    for word in fname:
+        p.insert(word)

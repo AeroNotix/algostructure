@@ -1,7 +1,6 @@
 #include <Python.h>
 #include <string>
 #include "prefixtrie.h"
-#include <csignal>
 
 typedef struct {
     PyObject_HEAD
@@ -31,10 +30,10 @@ static PyObject* PrefixTrie_new(PyTypeObject* type, PyObject *args, PyObject *kw
     return (PyObject*) self;
 }
 
-static PyObject* PrefixTrie_init(PrefixTrie_obj *self, PyObject *args, PyObject *kwds) {
+static int PrefixTrie_init(PrefixTrie_obj *self, PyObject *args, PyObject *kwds) {
     char* str;
     if (!PyArg_ParseTuple(args, "s", &str)) {
-	return NULL;
+	return -1;
     }
     self->ptrie->prefix = str;
     return 0;
