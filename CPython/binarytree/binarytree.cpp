@@ -18,7 +18,7 @@ bool BinaryTree_intCMP(PyObject *left, PyObject *right) {
     return l < r;
 }
 
-static PyObject* BinaryTree_new(BinaryTree_obj *self, PyObject *args, PyObject *kwds) {
+static PyObject* BinaryTree_init(BinaryTree_obj *self, PyObject *args, PyObject *kwds) {
     binarytree::BinaryTree<PyObject*> tmp(BinaryTree_intCMP);
     (self->btree) = tmp;
     return 0;
@@ -91,7 +91,7 @@ static PyTypeObject BinaryTreeType = {
     0,                                    /* tp_descr_get */
     0,                                    /* tp_descr_set */
     0,                                    /* tp_dictoffset */
-    (initproc) BinaryTree_new,            /* tp_init */
+    (initproc) BinaryTree_init,           /* tp_init */
     0,                                    /* tp_alloc */
     0,                                    /* tp_new */
 };
