@@ -1,5 +1,6 @@
 #ifndef PREFIXINC
 #include <prefixtrie.h>
+#include <fstream>
 #define PREFIXINC
 #endif
 
@@ -98,4 +99,19 @@ void Node<T>::Display(void (*fcn) (Node<T>), int level) {
     std::cout << std::endl;
     for (auto seg : Nodes)
 	seg.Display(fcn, level+1);
+}
+
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+	std::cout << "Please supply a file" << std::endl;
+	return -1;
+    }
+
+    std::fstream fs(argv[1], std::fstream::in);
+    Node<std::string> n;
+    while (fs) {
+	std::string s;
+	fs >> s;
+	n.Insert(s);
+    }
 }
