@@ -12,7 +12,7 @@
 
 int board[HEIGHT][WIDTH];
 
-int weightedarray[10] = {0,0,0,0,0,0,1,1,1};
+int weightedarray[10] = {0,0,0,0,0,0,0,1,1};
 
 void genBoard(int (board)[HEIGHT][WIDTH]) {
 
@@ -50,8 +50,8 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 			board[x-1][y-1],
 			board[x-1][y],
 		    };
-		    for (auto el : neighbours) {
-			if (el)
+		    for (auto cell : neighbours) {
+			if (cell)
 			    aliveN++;
 		    }
 			/*
@@ -72,10 +72,10 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 			*/
 			if (board[x][y] == 1 && aliveN < 2) {
 				next_board[x][y] = 0;
-				continue;
+ 				continue;
 			}
 			if (board[x][y] == 1 && (aliveN == 2 || aliveN == 3))
-				continue;
+			        continue;
 			if (board[x][y] == 1 && aliveN > 3) {
 				next_board[x][y] = 0;
 				continue;
@@ -90,6 +90,7 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 }
 
 void drawBoard(int (board)[HEIGHT][WIDTH]) {
+        // Not cross platform.
 	std::cout << "\033[2J\033[1;1H";
 	for (int x = 0; x < HEIGHT; ++x) {
 		for (int y = 0; y < WIDTH; ++y) {
