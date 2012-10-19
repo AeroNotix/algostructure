@@ -72,7 +72,7 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 			*/
 			if (board[x][y] == 1 && aliveN < 2) {
 				next_board[x][y] = 0;
-				continue;
+ 				continue;
 			}
 			if (board[x][y] == 1 && (aliveN == 2 || aliveN == 3))
 				continue;
