@@ -2,27 +2,21 @@
 #include <string>
 #include "prefixtrie.h"
 
+/*
+  This is the concrete type we will be providing to the Python code
+*/
 typedef struct {
     PyObject_HEAD
     prefixtrie::Node<std::string> *ptrie;
 } PrefixTrie_obj;
 
-static PyObject* PrefixTrie_insert(PrefixTrie_obj *self, PyObject *args) {
-    char* str;
-    if (!PyArg_ParseTuple(args, "s", &str)) {
-	return NULL;
-    }
-    self->ptrie->Insert(str);
-    Py_RETURN_NONE;
-}
+/*
+  PrefixTrie_new prepares the memory that is allocated by tp_alloc.
 
-static PyObject* PrefixTrie_walk(PrefixTrie_obj *self) {
-    auto elems = self->ptrie->Walk();
-    for (auto el : elems)
-	std::cout << el << std::endl;
-    Py_RETURN_NONE;
-}
-
+  We call the default ctor because we simply want to make sure there
+  is an object that ptrie is pointing to. The _init function will take
+  care of the initial prefix.
+*/
 static PyObject* PrefixTrie_new(PyTypeObject* type, PyObject *args, PyObject *kwds) {
     PrefixTrie_obj *self;
     self = (PrefixTrie_obj *)type->tp_alloc(type, 0);
@@ -30,6 +24,10 @@ static PyObject* PrefixTrie_new(PyTypeObject* type, PyObject *args, PyObject *kw
     return (PyObject*) self;
 }
 
+/*
+  The equivalent of the Python class function __init__. In this case
+  we require a single argument which is a string
+*/
 static int PrefixTrie_init(PrefixTrie_obj *self, PyObject *args, PyObject *kwds) {
     char* str;
     if (!PyArg_ParseTuple(args, "s", &str)) {
@@ -39,6 +37,38 @@ static int PrefixTrie_init(PrefixTrie_obj *self, PyObject *args, PyObject *kwds)
     return 0;
 }
 
+/*
+  _insert provides a means to insert new prefixes/nodes into the trie.
+
+  We take a str and convert it to a char* and pass that to our ptrie
+  Insert method.
+*/
+static PyObject* PrefixTrie_insert(PrefixTrie_obj *self, PyObject *args) {
+    char* str;
+    if (!PyArg_ParseTuple(args, "s", &str)) {
+	return NULL;
+    }
+    self->ptrie->Insert(str);
+    Py_RETURN_NONE;
+}
+
+/*
+  _walk does not behave how it should do, it the moment it traverses
+  the trie and uses the sub-strings. This is more a shortcoming of
+  the underlying C++ implementation than the wrapper code. Later
+  implentations will fix this, though, patches welcome.
+*/
+static PyObject* PrefixTrie_walk(PrefixTrie_obj *self) {
+    auto elems = self->ptrie->Walk();
+    for (auto el : elems)
+	std::cout << el << std::endl;
+    Py_RETURN_NONE;
+}
+
+/*
+  print `var` || str(`var`) where var is an instance of a PrefixTrie
+  will call this method.
+*/
 PyObject* PrefixTrie_ToString(PyObject *self) {
     return PyString_FromString("PrefixTrie");
 }
