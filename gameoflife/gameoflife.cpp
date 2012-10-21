@@ -101,9 +101,9 @@ void drawBoard(int (board)[HEIGHT][WIDTH]) {
 	for (int x = 0; x < HEIGHT; ++x) {
 		for (int y = 0; y < WIDTH; ++y) {
 			if (board[x][y] == 0) {
-				mvaddch(y,x,DEAD);
+				mvaddch(x,y,DEAD);
 			} else {
-				mvaddch(y,x,ALIVE);
+				mvaddch(x,y,ALIVE);
 			}
 		}
 	}
