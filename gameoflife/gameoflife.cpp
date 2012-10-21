@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fstream>
+#include <ncurses.h>
 
 #define HEIGHT 80
 #define WIDTH 180
-#define UPDATELENGTH 150000
+#define UPDATELENGTH 50000
 #define ALIVE '*'
 #define DEAD ' '
 
@@ -97,26 +98,32 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 }
 
 void drawBoard(int (board)[HEIGHT][WIDTH]) {
-	std::cout << "\033[2J\033[1;1H";
 	for (int x = 0; x < HEIGHT; ++x) {
 		for (int y = 0; y < WIDTH; ++y) {
 			if (board[x][y] == 0) {
-				std::cout << DEAD;
+				mvaddch(y,x,DEAD);
 			} else {
-				std::cout << ALIVE;
+				mvaddch(y,x,ALIVE);
 			}
 		}
-		std::cout << std::endl;
 	}
+	refresh();
 }
 
 
 int main() {
+	initscr();
 	genBoard(board);
+	timeout(1000);
+	int ch;
 	while (1) {
 		updateBoard(board);
 		drawBoard(board);
-		usleep(UPDATELENGTH);
+		ch = getch();
+		if (ch == 32) /* spacebar */
+			usleep(5);
+		else
+			usleep(10000);
 	}
 	return 0;
 }
