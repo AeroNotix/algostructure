@@ -1,24 +1,24 @@
 package main
 
 import (
-	"time"
 	"fmt"
 	"math/rand"
 	"sort"
+	"time"
 )
 
 type compare func(interface{}, interface{}) bool
 
 type Tree struct {
-	Left *Tree
-	Value interface{}
-	Right *Tree
-	comp compare
+	Left   *Tree
+	Value  interface{}
+	Right  *Tree
+	comp   compare
 	Levels int
 }
 
 func NewTree(f compare) *Tree {
-	return &Tree{comp:f}
+	return &Tree{comp: f}
 }
 
 func (t *Tree) Add(v interface{}) bool {
@@ -44,7 +44,7 @@ func (t *Tree) Add(v interface{}) bool {
 	panic("Shouldn't get here")
 }
 
-func (t *Tree) walk(ch chan<- interface{})  {
+func (t *Tree) walk(ch chan<- interface{}) {
 	if t.Left != nil {
 		t.Left.walk(ch)
 	}
@@ -68,21 +68,21 @@ func (t *Tree) Walk() []interface{} {
 }
 
 func main() {
-	t := NewTree(func (current, newval interface{}) bool {
+	t := NewTree(func(current, newval interface{}) bool {
 		if current.(int) < newval.(int) {
 			return false
 		}
 		return true
 	})
 
-	t2 := NewTree(func (current, newval interface{}) bool {
+	t2 := NewTree(func(current, newval interface{}) bool {
 		if current.(int) < newval.(int) {
 			return false
 		}
 		return true
 	})
 
-	t3 := NewTree(func (current, newval interface{}) bool {
+	t3 := NewTree(func(current, newval interface{}) bool {
 		if current.(int) < newval.(int) {
 			return false
 		}
@@ -146,7 +146,9 @@ func (r RandomSlice) Len() int {
 
 func (RandomSlice) Less(i, j int) bool {
 	d := rand.Intn(2)
-	if d == 1 { return true }
+	if d == 1 {
+		return true
+	}
 	return false
 }
 
