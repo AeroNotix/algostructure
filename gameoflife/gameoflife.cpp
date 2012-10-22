@@ -3,10 +3,11 @@
 #include <unistd.h>
 #include <fstream>
 #include <vector>
+#include <ncurses.h>
 
 #define HEIGHT 80
 #define WIDTH 180
-#define UPDATELENGTH 150000
+#define UPDATELENGTH 30000
 #define ALIVE '*'
 #define DEAD ' '
 
@@ -90,27 +91,32 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 }
 
 void drawBoard(int (board)[HEIGHT][WIDTH]) {
-        // Not cross platform.
-	std::cout << "\033[2J\033[1;1H";
-	for (int x = 0; x < HEIGHT; ++x) {
-		for (int y = 0; y < WIDTH; ++y) {
-			if (board[x][y] == 0) {
-				std::cout << DEAD;
-			} else {
-				std::cout << ALIVE;
-			}
-		}
-		std::cout << std::endl;
+    // Not cross platform.
+    for (int x = 0; x < HEIGHT; ++x) {
+	for (int y = 0; y < WIDTH; ++y) {
+	    if (board[x][y] == 0) {
+		mvaddch(x,y,DEAD);
+	    } else {
+		mvaddch(x,y,ALIVE);
+	    }
 	}
+    }
+    refresh();
 }
 
 
 int main() {
-	genBoard(board);
-	while (1) {
-		updateBoard(board);
-		drawBoard(board);
-		usleep(UPDATELENGTH);
-	}
-	return 0;
+    initscr();
+    noecho();
+    genBoard(board);
+    int ch;
+    timeout(100);
+    while (ch != 32) {
+	ch = getch();
+	updateBoard(board);
+	drawBoard(board);
+	usleep(UPDATELENGTH);
+    }
+    endwin();
+    return 0;
 }
