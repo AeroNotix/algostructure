@@ -38,54 +38,30 @@ def updateBoard(board):
         for y in range(WIDTH):
             try:
                 aliveN = 0
-                deadN = 0
-
-                if not board[x-1][y+1]:
-                    deadN += 1
-                else:
-                    aliveN+= 1
-                if not board[x][y+1]:
-                    deadN += 1
-                else:
-                    aliveN += 1
-                if not board[x+1][y+1]:
-                    deadN += 1
-                else:
-                    aliveN += 1
-                if not board[x+1][y]:
-                    deadN += 1
-                else:
-                    aliveN += 1
-                if not board[x+1][y-1]:
-                    deadN += 1
-                else:
-                    aliveN += 1
-                if not board[x][y-1]:
-                    deadN += 1
-                else:
-                    aliveN += 1
-                if not board[x-1][y-1]:
-                    deadN += 1
-                else:
-                    aliveN += 1
-                if not board[x-1][y]:
-                    deadN += 1
-                else:
-                    aliveN += 1
+                neighbours = [
+                    board[x-1][y+1],
+                    board[x][y+1],
+                    board[x+1][y+1],
+                    board[x+1][y],
+                    board[x+1][y-1],
+                    board[x][y-1],
+                    board[x-1][y-1],
+                    board[x-1][y]
+                    ]
+                for cell in neighbours:
+                    if cell:
+                        aliveN += 1
             except IndexError:
                 pass
 
             if (board[x][y] == 1) and (aliveN < 2):
 		next_board[x][y] = 0
 		continue
-	    
 	    if (board[x][y] == 1) and (aliveN == 2 or aliveN == 3):
 		continue
-
 	    if (board[x][y] == 1) and (aliveN > 3):
 		next_board[x][y] = 0
                 continue
-	    
 	    if (board[x][y] == 0) and (aliveN == 3):
 		next_board[x][y] = 1
 		continue

@@ -6,13 +6,14 @@
 
 #define HEIGHT 80
 #define WIDTH 180
-#define UPDATELENGTH 50000
+#define UPDATELENGTH 30000
+
 #define ALIVE '*'
 #define DEAD ' '
 
 int board[HEIGHT][WIDTH];
 
-int weightedarray[10] = {0,0,0,0,0,0,1,1,1};
+int weightedarray[10] = {0,0,0,0,0,0,0,1,1};
 
 void genBoard(int (board)[HEIGHT][WIDTH]) {
 
@@ -39,29 +40,21 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 	copyBoard(next_board, board);
 	for (int x = 0; x < HEIGHT; ++x) {
 		for (int y = 0; y < WIDTH; ++y) {
-
-			if ((x == 0 || x == HEIGHT) ||
-				(y == 0 || y == WIDTH)) {
-				continue;
-			}
-
-			int aliveN = 0;
-			if (board[x-1][y+1])
-				aliveN++;
-			if (board[x][y+1])
-				aliveN++;
-			if (board[x+1][y+1])
-				aliveN++;
-			if (board[x+1][y])
-				aliveN++;
-			if (board[x+1][y-1])
-				aliveN++;
-			if (board[x][y-1])
-				aliveN++;
-			if (board[x-1][y-1])
-				aliveN++;
-			if (board[x-1][y])
-				aliveN++;
+		    int aliveN = 0;
+		    std::vector<int> neighbours = {
+			board[x-1][y+1],
+			board[x][y+1],
+			board[x+1][y+1],
+			board[x+1][y],
+			board[x+1][y-1],
+			board[x][y-1],
+			board[x-1][y-1],
+			board[x-1][y],
+		    };
+		    for (auto cell : neighbours) {
+			if (cell)
+			    aliveN++;
+		    }
 			/*
 			  Rules
 			  =====
@@ -80,10 +73,10 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 			*/
 			if (board[x][y] == 1 && aliveN < 2) {
 				next_board[x][y] = 0;
-				continue;
+ 				continue;
 			}
 			if (board[x][y] == 1 && (aliveN == 2 || aliveN == 3))
-				continue;
+			        continue;
 			if (board[x][y] == 1 && aliveN > 3) {
 				next_board[x][y] = 0;
 				continue;
@@ -112,18 +105,22 @@ void drawBoard(int (board)[HEIGHT][WIDTH]) {
 
 
 int main() {
-	initscr();
-	genBoard(board);
-	timeout(1000);
-	int ch;
-	while (1) {
-		updateBoard(board);
-		drawBoard(board);
-		ch = getch();
-		if (ch == 32) /* spacebar */
-			usleep(5);
-		else
+		initscr();
+		noecho();
+		genBoard(board);
+		int ch;
+		timeout(100);
+		while (1) {
+			ch = getch();
+			if (ch == 32) /* spacebar */
+				usleep(5);
+			else
 			usleep(10000);
-	}
-	return 0;
+
+			updateBoard(board);
+			drawBoard(board);
+			usleep(UPDATELENGTH);
+		}
+		endwin();
+		return 0;
 }
