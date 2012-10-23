@@ -19,7 +19,6 @@ int partition(int vec[], int left, int right, int piv) {
 			++store;
 		}
 	}
-
 	swap(vec, right, store);
 	return store;
 }
