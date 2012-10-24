@@ -11,3 +11,4 @@ build/*
 *build*
 *.so
 results
+bintreetest
