@@ -55,8 +55,7 @@ namespace binarytree {
 
     template <class T>
     BinaryTree<T>::BinaryTree()
-	: root(nullptr), levels(0) {
-    }
+	: fcn(nullptr), root(nullptr), levels(0) {}
 
     template <class T>
     BinaryTree<T>::~BinaryTree() {
@@ -77,7 +76,7 @@ namespace binarytree {
 	    return;
 	}
 
-	if (fcn != NULL) {
+	if (fcn != nullptr) {
 	    if (fcn(root->Value, i)) {
 		return add(i, root->Right);
 	    }
@@ -96,7 +95,7 @@ namespace binarytree {
 	    return;
 	}
 
-	if (fcn != NULL) {
+	if (fcn != nullptr) {
 	    if (fcn(leaf->Value, i)) {
 		return add(i, leaf->Right);
 	    }
