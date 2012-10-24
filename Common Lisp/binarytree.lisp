@@ -4,12 +4,12 @@
    (right :initarg :right :initform nil :accessor r)))
 
 (defmethod insert ((n Node) (i number))
-  (if (not (v n))
+  (if (not (value n))
       (progn
 	(setf (v n) i)
 	(setf (l n) (make-instance 'Node))
 	(setf (r n) (make-instance 'Node)))
-    (if (> (v n) i)
+    (if (> (value n) i)
 	(insert (l n) i)
       (insert (r n) i))))
 
@@ -17,21 +17,23 @@
   (v n))
 
 (defmethod walk ((n Node))
-  (if (not (v n))
+  (if (not (value n))
       nil
     (progn
       (walk (l n))
-      (print (v n))
+      (print (value n))
       (walk (r n)))))
 
-(setq root (make-instance 'Node))
+(defmethod addrandom ((n Node) (i number))
+  (if (= i 0)
+      nil
+    (progn
+      (insert n (random i))
+      (addrandom n (- i 1)))))
 
-(insert root 1)
-(insert root 123)
-(insert root 413)
-(insert root 13)
-(insert root 66)
-(insert root 2)
-(print (v root))
+(defun main()
+  (setq root (make-instance 'Node))
+  (addrandom root 1000000)
+  (exit))
 
-(walk root)
+(main)
