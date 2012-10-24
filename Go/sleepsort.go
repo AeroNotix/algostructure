@@ -20,20 +20,30 @@ func SleepSort(arr []int) []int {
 
 func emit(val int, to chan int) {
 	go func() {
-		ch := time.After(time.Duration(val) * time.Millisecond)
+		ch := time.After(time.Duration(val) * time.Microsecond)
 		<-ch
 		to <- val
 	}()
 }
 
+func isSorted(nums []int) bool {
+
+	old := nums[0]
+	for _, num := range nums {
+		if num < old {
+			fmt.Println(num, old)
+			return false
+		}
+	}
+	return true
+}
+
 func main() {
 	var randints []int
 
-	for i := 0; i < 10; i++ {
-		randints = append(randints, rand.Intn(100))
+	for i := 0; i < 100000; i++ {
+		randints = append(randints, rand.Intn(10000))
 	}
 
-	for _, item := range SleepSort(randints) {
-		fmt.Println(item)
-	}
+	fmt.Println(isSorted(SleepSort(randints)))
 }

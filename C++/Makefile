@@ -1,3 +1,7 @@
+all:
+	g++ -std=c++11 -o bintreetest -O3 -L. binarytree/test.cpp
+	g++ -std=c++11 -o prefixtrietest -O3 -L. prefixtrie/test.cpp
+
 shared:
 	g++ -fPIC -shared -std=c++11 -o libprefixtrie.so -Iprefixtrie -O3 prefixtrie/prefixtrie.cpp
 	g++ -fPIC -shared -std=c++11 -o libbtree.so -Ibinarytree -O3 binarytree/binarytree.h

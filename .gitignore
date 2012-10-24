@@ -10,3 +10,6 @@ build/*
 */build/*
 *build*
 *.so
+results
+bintreetest
+prefixtrietest

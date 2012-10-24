@@ -4,8 +4,6 @@
 #include <sstream>
 #include <string>
 
-using namespace std;
-
 namespace binarytree {
 
     template <class T>
@@ -39,16 +37,16 @@ namespace binarytree {
 	BinaryTree(bool (*f)(T, T));
 	~BinaryTree();
 	void Add(T);
-	vector<T> Walk() const;
+	std::vector<T> Walk() const;
 	unsigned int Levels() const;
-	string ToString() const;
+	std::string ToString() const;
 	bool (*fcn)(T, T);
 
     private:
 	unsigned int levels;
 	Tree<T> *root;
 	void add(T i, Tree<T>* &leaf);
-	void walk(Tree<T> *leaf, vector<T>*) const;
+	void walk(Tree<T> *leaf, std::vector<T>*) const;
     };
 
     template <class T>
@@ -57,8 +55,7 @@ namespace binarytree {
 
     template <class T>
     BinaryTree<T>::BinaryTree()
-	: root(nullptr), levels(0) {
-    }
+	: fcn(nullptr), root(nullptr), levels(0) {}
 
     template <class T>
     BinaryTree<T>::~BinaryTree() {
@@ -79,7 +76,7 @@ namespace binarytree {
 	    return;
 	}
 
-	if (fcn != NULL) {
+	if (fcn != nullptr) {
 	    if (fcn(root->Value, i)) {
 		return add(i, root->Right);
 	    }
@@ -98,7 +95,7 @@ namespace binarytree {
 	    return;
 	}
 
-	if (fcn != NULL) {
+	if (fcn != nullptr) {
 	    if (fcn(leaf->Value, i)) {
 		return add(i, leaf->Right);
 	    }
@@ -111,8 +108,8 @@ namespace binarytree {
     }
 
     template <class T>
-    vector<T> BinaryTree<T>::Walk() const {
-	vector<T> out;
+    std::vector<T> BinaryTree<T>::Walk() const {
+	std::vector<T> out;
 	if (root == nullptr) {
 	    return out;
 	}
@@ -125,7 +122,7 @@ namespace binarytree {
     }
 
     template <class T>
-    void BinaryTree<T>::walk(Tree<T> *leaf, vector<T> *out) const {
+    void BinaryTree<T>::walk(Tree<T> *leaf, std::vector<T> *out) const {
 	if (leaf == nullptr) {
 	    return;
 	}
@@ -136,8 +133,8 @@ namespace binarytree {
     }
 
     template<>
-    string BinaryTree<int>::ToString() const {
-	stringstream buffer(stringstream::in);
+    std::string BinaryTree<int>::ToString() const {
+	std::stringstream buffer(std::stringstream::in);
 	buffer << "[ ";
 	for (auto el : Walk()) {
 	    buffer << el << " ";
