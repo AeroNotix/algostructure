@@ -3,12 +3,15 @@
 #include <vector>
 #include <sstream>
 #include <string>
+#include <stdexcept>
 
 namespace binarytree {
 
     template <class T>
     class Tree {
     public:
+	Tree()
+	    : Value(T()), Left(nullptr), Right(nullptr) {};
 	~Tree();
 	T Value;
 	Tree<T> *Left;
@@ -22,8 +25,8 @@ namespace binarytree {
     }
 
     template <class T>
-    Tree<T> *NewNode(T i) {
-	Tree<T> *t = new Tree<T>;
+    Tree<T> *NewNode(T& i) {
+	Tree<T> *t = new Tree<T>();
 	t->Value = i;
 	t->Left = nullptr;
 	t->Right = nullptr;
@@ -33,14 +36,17 @@ namespace binarytree {
     template <class T>
     class BinaryTree {
     public:
-	BinaryTree();
-	BinaryTree(bool (*f)(T, T));
+	BinaryTree()
+	    : fcn(nullptr), root(nullptr), levels(0) {}
+	BinaryTree(bool (*f)(T, T), void(*f2)(T))
+	    : pre(f2), fcn(f), root(nullptr), levels(0) {}
 	~BinaryTree();
 	void Add(T);
 	std::vector<T> Walk() const;
 	unsigned int Levels() const;
 	std::string ToString() const;
 	bool (*fcn)(T, T);
+	void (*pre)(T);
 
     private:
 	unsigned int levels;
@@ -48,14 +54,6 @@ namespace binarytree {
 	void add(T i, Tree<T>* &leaf);
 	void walk(Tree<T> *leaf, std::vector<T>*) const;
     };
-
-    template <class T>
-    BinaryTree<T>::BinaryTree(bool (*f)(T, T))
-	: fcn(f), root(nullptr), levels(0) {}
-
-    template <class T>
-    BinaryTree<T>::BinaryTree()
-	: fcn(nullptr), root(nullptr), levels(0) {}
 
     template <class T>
     BinaryTree<T>::~BinaryTree() {
@@ -72,6 +70,8 @@ namespace binarytree {
 	levels++;
 
 	if (root == nullptr) {
+	    if (pre != nullptr)
+		pre(i);
 	    root = NewNode<T>(i);
 	    return;
 	}
@@ -91,6 +91,8 @@ namespace binarytree {
     template <class T>
     void BinaryTree<T>::add(T i, Tree<T>* &leaf) {
 	if (leaf == nullptr) {
+	    if (pre != nullptr)
+		pre(i);
 	    leaf = NewNode<T>(i);
 	    return;
 	}
