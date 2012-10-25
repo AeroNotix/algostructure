@@ -84,7 +84,6 @@ namespace prefixtrie {
     template <class T>
     std::vector<T> Node<T>::Walk() {
 	std::vector<T> out;
-	std::cout << prefix << std::endl;
 	out.push_back(prefix);
 	for (auto beg = Nodes.begin(); beg != Nodes.end(); ++beg) {
 	    beg->Walk(out);
