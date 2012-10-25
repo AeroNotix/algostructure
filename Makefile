@@ -68,6 +68,17 @@ btree:
 	$(timer) go run Go/binarytree.go
 	$(timer) go run Go/binarytree.go
 
+	echo "Common Lisp/binarytree" >> results
+	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
+	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
+	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
+	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
+	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
+	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
+	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
+	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
+	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
+
 	rm ./C++/bintreetest ./C++/prefixtrietest
 
 prefixtrie:
