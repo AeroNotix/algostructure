@@ -60,9 +60,18 @@ static PyObject* PrefixTrie_insert(PrefixTrie_obj *self, PyObject *args) {
 */
 static PyObject* PrefixTrie_walk(PrefixTrie_obj *self) {
     auto elems = self->ptrie->Walk();
-    for (auto el : elems)
-	std::cout << el << std::endl;
-    Py_RETURN_NONE;
+    PyObject *list;
+    list = PyList_New(0);
+    for (auto el : elems) {
+	PyObject *str;
+	str = PyString_FromString(el.c_str());
+	if (str) {
+	    if (PyList_Append(list, str) == -1) {
+		return NULL;
+	    }
+	}
+    }
+    return list;
 }
 
 /*

@@ -10,19 +10,23 @@ typedef struct {
 } BinaryTree_obj;
 
 static void BinaryTree_dealloc(BinaryTree_obj *self) {
-    self->btree->~BinaryTree();
+    delete self->btree;
 }
 
 bool BinaryTree_intCMP(PyObject *left, PyObject *right) {
-    int l = PyInt_AsLong(left);
-    int r = PyInt_AsLong(right);
+    long l = PyInt_AsLong(left);
+    long r = PyInt_AsLong(right);
     return l < r;
+}
+
+void BinaryTree_preinsert(PyObject *o) {
+    Py_INCREF(o);
 }
 
 static PyObject* BinaryTree_new(PyTypeObject* type, PyObject *args, PyObject *kwds) {
     BinaryTree_obj *self;
     self = (BinaryTree_obj*)type->tp_alloc(type, 0);
-    self->btree = new binarytree::BinaryTree<PyObject*>(BinaryTree_intCMP); 
+    self->btree = new binarytree::BinaryTree<PyObject*>(BinaryTree_intCMP, BinaryTree_preinsert);
     return (PyObject*) self;
 }
 
@@ -45,21 +49,21 @@ static PyObject* BinaryTree_add(BinaryTree_obj *self, PyObject *args) {
 
 static PyObject* BinaryTree_walk(BinaryTree_obj *self) {
     auto sortedItems = self->btree->Walk();
-    PyObject *list = PyList_New(sortedItems.size());
+    PyObject *list = PyList_New(0);
     for (int x = 0; x < sortedItems.size(); ++x) {
-	if (PyList_SetItem(list, x, sortedItems[x]) == -1) {
+	if (PyList_Append(list, sortedItems[x]) == -1) {
+	    Py_DECREF(list);
 	    return NULL;
 	}
-	Py_DECREF(sortedItems[x]);
     }
-
     return list;
 }
 
 static PyMethodDef BinaryTree_methods[] = {
     {"add", (PyCFunction) BinaryTree_add, METH_VARARGS, "Add an element to the BinaryTree"},
     {"walk", (PyCFunction) BinaryTree_walk, METH_NOARGS, "Walk the tree and return a list"},
-    {NULL} /* Sentinel */
+    {NULL}
+    /* Sentinel */
 };
 
 static PyTypeObject BinaryTreeType = {
@@ -68,7 +72,7 @@ static PyTypeObject BinaryTreeType = {
     "binarytree.BinaryTree",           /* tp_name, string for object */
     sizeof(BinaryTree_obj),            /* tp_basicsize, how much space to alloc */
     0,                                 /* tp_itemsize */
-    0,//(destructor) BinaryTree_dealloc,   /* tp_dealloc */
+    (destructor) BinaryTree_dealloc,   /* tp_dealloc */
     0,                                 /* tp_print */
     0,                                 /* tp_getattr */
     0,                                 /* tp_setattr */
@@ -85,12 +89,12 @@ static PyTypeObject BinaryTreeType = {
     0,                                 /* tp_as_buffer  */
     Py_TPFLAGS_DEFAULT,                /* tp_flags  */
     "BinaryTree  object",              /* tp_doc */
-    0,		                       /* tp_traverse  */
-    0,		                       /* tp_clear  */
-    0,		                       /* tp_richcompare  */
-    0,		                       /* tp_weaklistoffset  */
-    0,		                       /* tp_iter  */
-    0,		                       /* tp_iternext  */
+    0,				       /* tp_traverse  */
+    0,				       /* tp_clear  */
+    0,				       /* tp_richcompare  */
+    0,				       /* tp_weaklistoffset  */
+    0,				       /* tp_iter  */
+    0,				       /* tp_iternext  */
     BinaryTree_methods,                /* tp_methods  */
     0,                                 /* tp_members  */
     0,                                 /* tp_getset  */
