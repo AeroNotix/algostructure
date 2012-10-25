@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"sort"
-	"time"
 )
 
 type compare func(interface{}, interface{}) bool
@@ -23,48 +21,33 @@ func NewTree(f compare) *Tree {
 
 func (t *Tree) Add(v interface{}) bool {
 	t.Levels++
-	if t.Value == nil {
-		t.Value = v
-		return true
+
+	var node *Tree = t
+	for node.Value != nil {
+		if node.comp(node.Value, v) {
+			node = node.Left
+		} else {
+			node = node.Right
+		}
 	}
 
-	if t.comp(t.Value, v) {
-		if t.Left == nil {
-			t.Left = NewTree(t.comp)
-		}
-		return t.Left.Add(v)
-	}
-
-	if !t.comp(t.Value, v) {
-		if t.Right == nil {
-			t.Right = NewTree(t.comp)
-		}
-		return t.Right.Add(v)
-	}
-	panic("Shouldn't get here")
+	node.Value = v
+	node.Left = NewTree(t.comp)
+	node.Right = NewTree(t.comp)
+	return true
 }
 
-func (t *Tree) walk(ch chan<- interface{}) {
-	if t.Left != nil {
-		t.Left.walk(ch)
+func (t *Tree) walk() {
+	if t.Left.Value != nil {
+		t.Left.walk()
 	}
-	ch <- t.Value
-	if t.Right != nil {
-		t.Right.walk(ch)
+	if t.Right.Value != nil {
+		t.Right.walk()
 	}
 }
 
-func (t *Tree) Walk() []interface{} {
-	ch := make(chan interface{}, t.Levels)
-
-	t.walk(ch)
-	close(ch)
-
-	var ar []interface{}
-	for item := range ch {
-		ar = append(ar, item)
-	}
-	return ar
+func (t *Tree) Walk() {
+	t.walk()
 }
 
 func main() {
@@ -75,83 +58,7 @@ func main() {
 		return true
 	})
 
-	t2 := NewTree(func(current, newval interface{}) bool {
-		if current.(int) < newval.(int) {
-			return false
-		}
-		return true
-	})
-
-	t3 := NewTree(func(current, newval interface{}) bool {
-		if current.(int) < newval.(int) {
-			return false
-		}
-		return true
-	})
-
-	intslice := make([]int, 0, 100000)
-	for x := 0; x < 100000; x++ {
-		intslice = append(intslice, x)
+	for x := 0; x < 1000000; x++ {
+		t.Add(rand.Intn(x + 1))
 	}
-	intslice2 := make([]int, 0, 100000)
-	for x := 0; x < 100000; x++ {
-		intslice2 = append(intslice2, x)
-	}
-	intslice3 := make([]int, 0, 100000)
-	for x := 0; x < 100000; x++ {
-		intslice3 = append(intslice3, x)
-	}
-
-	r := RandomSlice{intslice}
-	r2 := RandomSlice{intslice2}
-	sort.Sort(r)
-	sort.Sort(r2)
-
-	ti := time.Now()
-	for _, num := range r.Slice {
-		t.Add(num)
-	}
-	fmt.Println(time.Now().Sub(ti))
-
-	ti = time.Now()
-	for _, num := range r2.Slice {
-		t2.Add(num)
-	}
-	fmt.Println(time.Now().Sub(ti))
-
-	ti = time.Now()
-	for _, num := range intslice3 {
-		t3.Add(num)
-	}
-	fmt.Println(time.Now().Sub(ti))
-
-	ti = time.Now()
-	t.Walk()
-	fmt.Println(time.Now().Sub(ti))
-	ti = time.Now()
-	t2.Walk()
-	fmt.Println(time.Now().Sub(ti))
-	ti = time.Now()
-	t3.Walk()
-	fmt.Println(time.Now().Sub(ti))
-}
-
-type RandomSlice struct {
-	Slice []int
-}
-
-func (r RandomSlice) Len() int {
-	return len(r.Slice)
-}
-
-func (RandomSlice) Less(i, j int) bool {
-	d := rand.Intn(2)
-	if d == 1 {
-		return true
-	}
-	return false
-}
-
-func (r RandomSlice) Swap(i, j int) {
-	r.Slice[i], r.Slice[j] = r.Slice[j], r.Slice[i]
 }
