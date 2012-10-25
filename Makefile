@@ -7,9 +7,7 @@ all:
 	cd CPython/binarytree; make
 	cd CPython/prefixtrie; make
 
-test:
-	make
-
+btree:
 	echo "C++/binarytree" > results
 	$(timer) ./C++/bintreetest
 	$(timer) ./C++/bintreetest
@@ -21,18 +19,6 @@ test:
 	$(timer) ./C++/bintreetest
 	$(timer) ./C++/bintreetest
 	$(timer) ./C++/bintreetest
-
-	echo "C++/prefixtrie" >> results
-	$(timer) ./C++/prefixtrietest $(dict)
-	$(timer) ./C++/prefixtrietest $(dict)
-	$(timer) ./C++/prefixtrietest $(dict)
-	$(timer) ./C++/prefixtrietest $(dict)
-	$(timer) ./C++/prefixtrietest $(dict)
-	$(timer) ./C++/prefixtrietest $(dict)
-	$(timer) ./C++/prefixtrietest $(dict)
-	$(timer) ./C++/prefixtrietest $(dict)
-	$(timer) ./C++/prefixtrietest $(dict)
-	$(timer) ./C++/prefixtrietest $(dict)
 
 	echo "CPython/binarytree" >> results
 	$(timer) python2 ./CPython/binarytree/btreetest.py
@@ -58,4 +44,41 @@ test:
 	$(timer) pypy ./Python/btree.py
 	$(timer) pypy ./Python/btree.py
 
+	echo "Java/binarytree" >> results
+	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
+	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
+	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
+	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
+	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
+	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
+	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
+	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
+	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
+	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
+
+	echo "Go/binarytree" >> results
+	$(timer) go run Go/binarytree.go
+	$(timer) go run Go/binarytree.go
+	$(timer) go run Go/binarytree.go
+	$(timer) go run Go/binarytree.go
+	$(timer) go run Go/binarytree.go
+	$(timer) go run Go/binarytree.go
+	$(timer) go run Go/binarytree.go
+	$(timer) go run Go/binarytree.go
+	$(timer) go run Go/binarytree.go
+	$(timer) go run Go/binarytree.go
+
 	rm ./C++/bintreetest ./C++/prefixtrietest
+
+prefixtrie:
+	echo "C++/prefixtrie" >> results
+	$(timer) ./C++/prefixtrietest $(dict)
+	$(timer) ./C++/prefixtrietest $(dict)
+	$(timer) ./C++/prefixtrietest $(dict)
+	$(timer) ./C++/prefixtrietest $(dict)
+	$(timer) ./C++/prefixtrietest $(dict)
+	$(timer) ./C++/prefixtrietest $(dict)
+	$(timer) ./C++/prefixtrietest $(dict)
+	$(timer) ./C++/prefixtrietest $(dict)
+	$(timer) ./C++/prefixtrietest $(dict)
+	$(timer) ./C++/prefixtrietest $(dict)
