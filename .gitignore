@@ -13,3 +13,4 @@ build/*
 results
 bintreetest
 prefixtrietest
+*.class
