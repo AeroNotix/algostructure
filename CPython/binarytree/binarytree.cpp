@@ -16,7 +16,7 @@ static void BinaryTree_dealloc(BinaryTree_obj *self) {
 bool BinaryTree_intCMP(PyObject *left, PyObject *right) {
     long l = PyInt_AsLong(left);
     long r = PyInt_AsLong(right);
-    return l < r;
+    return l > r;
 }
 
 void BinaryTree_preinsert(PyObject *o) {
