@@ -10,138 +10,113 @@ namespace binarytree {
     template <class T>
     class Tree {
     public:
-	Tree()
-	    : Value(T()), Left(nullptr), Right(nullptr) {};
-	~Tree();
-	T Value;
-	Tree<T> *Left;
-	Tree<T> *Right;
+		Tree()
+			: Value(T()), Left(nullptr), Right(nullptr) {};
+		Tree(T el)
+			: Value(el), Left(nullptr), Right(nullptr) {};
+		~Tree();
+		T Value;
+		Tree<T> *Left;
+		Tree<T> *Right;
     };
 
     template <class T>
     Tree<T>::~Tree() {
-	delete Left;
-	delete Right;
-    }
-
-    template <class T>
-    Tree<T> *NewNode(T& i) {
-	Tree<T> *t = new Tree<T>();
-	t->Value = i;
-	t->Left = nullptr;
-	t->Right = nullptr;
-	return t;
+		delete Left;
+		delete Right;
     }
 
     template <class T>
     class BinaryTree {
     public:
-	BinaryTree()
-	    : fcn(nullptr), root(nullptr), levels(0) {}
-	BinaryTree(bool (*f)(T, T), void(*f2)(T))
-	    : pre(f2), fcn(f), root(nullptr), levels(0) {}
-	~BinaryTree();
-	void Add(T);
-	std::vector<T> Walk() const;
-	unsigned int Levels() const;
-	std::string ToString() const;
-	bool (*fcn)(T, T);
-	void (*pre)(T);
+		BinaryTree()
+			: pre(nullptr), fcn(nullptr), root(nullptr), levels(0) {}
+		BinaryTree(bool (*f)(T, T), void(*f2)(T))
+			: pre(f2), fcn(f), root(nullptr), levels(0) {}
+		~BinaryTree();
+		void Add(T);
+		std::vector<T> Walk() const;
+		unsigned int Levels() const;
+		std::string ToString() const;
+		bool (*fcn)(T, T);
+		void (*pre)(T);
 
     private:
-	unsigned int levels;
-	Tree<T> *root;
-	void add(T i, Tree<T>* &leaf);
-	void walk(Tree<T> *leaf, std::vector<T>*) const;
+		unsigned int levels;
+		Tree<T> *root;
+		void add(T i, Tree<T>* &leaf);
+		void walk(Tree<T> *leaf, std::vector<T>*) const;
     };
 
     template <class T>
     BinaryTree<T>::~BinaryTree() {
-	delete root;
+		delete root;
     }
 
     template <class T>
     unsigned int BinaryTree<T>::Levels() const {
-	return levels;
+		return levels;
     }
 
     template <class T>
     void BinaryTree<T>::Add(T i) {
-	levels++;
 
-	if (root == nullptr) {
-	    if (pre != nullptr)
-		pre(i);
-	    root = NewNode<T>(i);
-	    return;
-	}
+		if (pre != nullptr)
+			pre(i);
 
-	if (fcn != nullptr) {
-	    if (fcn(root->Value, i)) {
-		return add(i, root->Right);
-	    }
-	} else {
-	    if (root->Value < i) {
-		return add(i, root->Right);
-	    }
+		levels++;
+		Tree<T> **node = &(this->root);
+		while (*node != nullptr) {
+			if (fcn != nullptr) {
+				if (fcn((*node)->Value, i)) {
+					node = &((*node)->Left);
+				} else {
+					node = &((*node)->Right);
+				}
+			} else {
+				if ((*node)->Value > i) {
+					node = &((*node)->Left);
+				} else {
+					node = &((*node)->Right);
+				}
+			}
+		}
+		*node = new Tree<T>(i);
 	}
-	return add(i, root->Left);
-    }
-
-    template <class T>
-    void BinaryTree<T>::add(T i, Tree<T>* &leaf) {
-	if (leaf == nullptr) {
-	    if (pre != nullptr)
-		pre(i);
-	    leaf = NewNode<T>(i);
-	    return;
-	}
-
-	if (fcn != nullptr) {
-	    if (fcn(leaf->Value, i)) {
-		return add(i, leaf->Right);
-	    }
-	} else {
-	    if (leaf->Value < i) {
-		return add(i, leaf->Right);
-	    }
-	}
-	return add(i, leaf->Left);
-    }
 
     template <class T>
     std::vector<T> BinaryTree<T>::Walk() const {
-	std::vector<T> out;
-	if (root == nullptr) {
-	    return out;
-	}
+		std::vector<T> out;
+		if (root == nullptr) {
+			return out;
+		}
 
-	walk(root->Left, &out);
-	out.push_back(root->Value);
-	walk(root->Right, &out);
+		walk(root->Left, &out);
+		out.push_back(root->Value);
+		walk(root->Right, &out);
 
-	return out;
+		return out;
     }
 
     template <class T>
     void BinaryTree<T>::walk(Tree<T> *leaf, std::vector<T> *out) const {
-	if (leaf == nullptr) {
-	    return;
-	}
+		if (leaf == nullptr) {
+			return;
+		}
 
-	walk(leaf->Left, out);
-	out->push_back(leaf->Value);
-	walk(leaf->Right, out);
+		walk(leaf->Left, out);
+		out->push_back(leaf->Value);
+		walk(leaf->Right, out);
     }
 
     template<>
     std::string BinaryTree<int>::ToString() const {
-	std::stringstream buffer(std::stringstream::in);
-	buffer << "[ ";
-	for (auto el : Walk()) {
-	    buffer << el << " ";
-	}
-	buffer << "]";
-	return buffer.str();
+		std::stringstream buffer(std::stringstream::in);
+		buffer << "[ ";
+		for (auto el : Walk()) {
+			buffer << el << " ";
+		}
+		buffer << "]";
+		return buffer.str();
     }
 }
