@@ -45,16 +45,16 @@ btree:
 	$(timer) pypy ./Python/btree.py
 
 	echo "Java/binarytree" >> results
-	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
-	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
-	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
-	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
-	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
-	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
-	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
-	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
-	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
-	$(timer) java -cp Java -Xss9999k BinaryTree.BinaryTree
+	cd Java; make testbtree
+	cd Java; make testbtree
+	cd Java; make testbtree
+	cd Java; make testbtree
+	cd Java; make testbtree
+	cd Java; make testbtree
+	cd Java; make testbtree
+	cd Java; make testbtree
+	cd Java; make testbtree
+	cd Java; make testbtree
 
 	echo "Go/binarytree" >> results
 	$(timer) go run Go/binarytree.go
