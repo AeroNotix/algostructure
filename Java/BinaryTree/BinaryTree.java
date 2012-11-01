@@ -9,9 +9,9 @@ public class BinaryTree {
 
     public static void main(String[] args) {
 		BinaryTree binTree = new BinaryTree();
-
+		Random generator = new Random();
 		for (int x = 0; x < 1000000; x++) {
-			binTree.addLeaf(new AValue(x));
+			binTree.addLeaf(new AValue(generator.nextInt()));
 		}
 	}
 
@@ -22,7 +22,6 @@ public class BinaryTree {
     public void addLeaf(Comparable val) {
 		if (root == null) {
 			root = new Tree(val);
-			System.out.println(root.value+" base");
 			return;
 		}
 
