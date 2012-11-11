@@ -1,10 +1,16 @@
 -module(binarytree).
--export([init/0,add/1,addNValues/1,walk/0,addValues/1]).
--export([server/0,server/3,retrieve/1]).
+-export([init/0,
+		 add/1,
+		 addNValues/1,
+		 walk/0,
+		 addValues/1]).
+-export([server/0,
+		 server/3,
+		 retrieve/1]).
 
 %% Registers the async'd Pid with the atom 'root'.
 init() ->
-    register(root, spawn(binarytree,server,[])).
+    register(root, spawn(binarytree, server, [])).
 
 %% "Constructor" for the server, seeds initial values.
 server() ->
@@ -93,11 +99,7 @@ walk()->
 
 %% Adds data to the tree.
 add(Data) ->
-    root ! {add, Data, self()},
-    receive
-        added ->
-            ok
-    end.
+    root ! {add, Data, self()}.
 
 %% Used internally by the binary tree to retrieve sub
 %% node's data.
@@ -120,3 +122,11 @@ addValues(0) ->
 addValues(N) ->
     add(N),
     addValues(N-1).
+
+testforn(N) ->
+	init(),
+	addNValues(N),
+	root ! quit.
+
+main(_) ->
+	testforn(1000000).
