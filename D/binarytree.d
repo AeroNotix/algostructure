@@ -6,8 +6,7 @@ class Node(T) {
     T *value;
 
     void Insert(T val) {
-        Node!T n;
-        n = this;
+        Node!T n = this;
         while (n.value) {
             if (*n.value > val)
                 n = n.left;
