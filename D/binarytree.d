@@ -1,39 +1,40 @@
 import std.stdio, std.random;
 
 class Node(T) {
-	Node!T left;
-	Node!T right;
-	T *value;
+    Node!T left;
+    Node!T right;
+    T *value;
 
-	void Insert(T val) {
-		if (value == null) {
-			*(value = new T()) = val;
-			left = new Node!T;
-			right = new Node!T;
-			return;
-		}
+    void Insert(T val) {
+        Node!T n;
+        n = this;
+        while (n.value) {
+            if (*n.value > val)
+                n = n.left;
+            else
+                n = n.right;
+        }
+        *(n.value = new T()) = val;
+        n.left = new Node!T;
+        n.right = new Node!T; 
+    }
 
-		if (*value > val) {
-			return left.Insert(val);
-		}
-		return right.Insert(val);
-	}
-
-	void Walk() {
-		if (value == null)
-			return;
-		left.Walk();
-		writeln(*value);
-		right.Walk();
-	}
+    void Walk() {
+        if (value == null)
+            return;
+        left.Walk();
+        writeln(*value);
+        right.Walk();
+    }
 }
 
 int main() {
-	Node!int root = new Node!int; 
+    Node!int root = new Node!int;
 
-	foreach(num; 1 .. 1000000) {
-		auto i = uniform(0, num);
-		root.Insert(i);
-	}
-	return 0;
+    foreach(num; 1 .. 1000000) {
+        auto i = uniform(0, num);
+        root.Insert(i);
+    }
+    root.Walk();
+    return 0;
 }
