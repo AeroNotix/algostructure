@@ -78,6 +78,19 @@ btree:
 	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
 	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
 	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
+	$(timer) sbcl --load "Common Lisp/binarytree.lisp"
+
+	echo "D/binarytree" >> results
+	$(timer) ./D/binarytree
+	$(timer) ./D/binarytree
+	$(timer) ./D/binarytree
+	$(timer) ./D/binarytree
+	$(timer) ./D/binarytree
+	$(timer) ./D/binarytree
+	$(timer) ./D/binarytree
+	$(timer) ./D/binarytree
+	$(timer) ./D/binarytree
+	$(timer) ./D/binarytree
 
 	rm ./C++/bintreetest ./C++/prefixtrietest
 
