@@ -1,0 +1,16 @@
+%% -*- mode: Erlang;-*-
+{application, binarytree,
+ [
+  {description, "A binary tree implemented as an OTP supervision hierarchy."},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+		  kernel,
+		  observer,
+		  runtime_tools,
+		  stdlib,
+		 ]},
+  {mod, { binarytree_app, []}},
+  {env, []}
+ ]
+}.
