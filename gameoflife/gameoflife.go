@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	HEIGHT       = 80
-	WIDTH        = 180
+	HEIGHT       = 40
+	WIDTH        = 80
 	UPDATELENGTH = 30000
 	ALIVE        = '*'
 	DEAD         = ' '
