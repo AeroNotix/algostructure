@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 )
@@ -96,14 +97,18 @@ func drawBoard(board [HEIGHT][WIDTH]int) {
 	for x := 0; x < HEIGHT; x++ {
 		for y := 0; y < WIDTH; y++ {
 			if board[x][y] == 0 {
+				fmt.Print("0")
 			} else {
+				fmt.Print("X")
 			}
 		}
+		fmt.Println()
 	}
 }
 
 func main() {
 	genBoard(board)
+	drawBoard(board)
 	for {
 		time.Sleep(10000)
 		updateBoard(board)
