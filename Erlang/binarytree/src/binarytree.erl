@@ -1,6 +1,6 @@
 %%%-------------------------------------------------------------------
 %%% @author  <>
-%%% @copyright (C) 2013, 
+%%% @copyright (C) 2013,
 %%% @doc
 %%%
 %%% @end
@@ -17,7 +17,7 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
 
--define(SERVER, ?MODULE). 
+-define(SERVER, ?MODULE).
 
 -record(state, {left = nil, value, right = nil}).
 
@@ -89,7 +89,7 @@ handle_call({add, Data}, _From, State) ->
                     {reply, added, State#state{right=NewPid}};
                 true ->
                     gen_server:call(Right, {add, Data}),
-                    {reply, added, State}                
+                    {reply, added, State}
             end
     end;
 
