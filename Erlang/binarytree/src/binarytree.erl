@@ -19,7 +19,7 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, {left = nil, value, right = nil}).
+-record(state, {left = nil, value = nil, right = nil}).
 
 %%%===================================================================
 %%% API
@@ -51,7 +51,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    {ok, #state{nil, nil, nil}}.
+    {ok, #state{left=nil, value=nil, right=nil}}.
 
 %%--------------------------------------------------------------------
 %% @private
