@@ -46,6 +46,9 @@ func updateBoard(board [HEIGHT][WIDTH]int) {
 	for x := 2; x < HEIGHT; x++ {
 		for y := x; y < WIDTH; y++ {
 			aliveN := 0
+			if !checkbounds(x, y) {
+				continue
+			}
 			neighbours := []int{
 				board[x-1][y+1],
 				board[x][y+1],
