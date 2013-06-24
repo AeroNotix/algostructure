@@ -20,7 +20,7 @@ var (
 	weightedarray = [10]int{0, 0, 0, 0, 0, 0, 0, 1, 1}
 )
 
-func genBoard(board [HEIGHT][WIDTH]int) {
+func genBoard(board *[HEIGHT][WIDTH]int) {
 	for x := 0; x < HEIGHT; x++ {
 		for y := 0; y < WIDTH; y++ {
 			board[x][y] = weightedarray[rand.Intn(10)]
@@ -28,7 +28,7 @@ func genBoard(board [HEIGHT][WIDTH]int) {
 	}
 }
 
-func copyBoard(newB [HEIGHT][WIDTH]int, oldB [HEIGHT][WIDTH]int) {
+func copyBoard(newB *[HEIGHT][WIDTH]int, oldB [HEIGHT][WIDTH]int) {
 	for x := 0; x < HEIGHT; x++ {
 		for y := 0; y < WIDTH; y++ {
 			newB[x][y] = oldB[x][y]
@@ -41,10 +41,10 @@ func clearscreen() {
 }
 
 func updateBoard(board [HEIGHT][WIDTH]int) {
-	var next_board [HEIGHT][WIDTH]int
-	copyBoard(next_board, board)
-	for x := 0; x < HEIGHT; x++ {
-		for y := 0; y < WIDTH; y++ {
+	next_board := [HEIGHT][WIDTH]int{}
+	copyBoard(&next_board, board)
+	for x := 2; x < HEIGHT; x++ {
+		for y := x; y < WIDTH; y++ {
 			aliveN := 0
 			neighbours := []int{
 				board[x-1][y+1],
@@ -95,7 +95,7 @@ func updateBoard(board [HEIGHT][WIDTH]int) {
 			}
 		}
 	}
-	copyBoard(board, next_board)
+	copyBoard(&board, next_board)
 }
 
 func drawBoard(board [HEIGHT][WIDTH]int) {
