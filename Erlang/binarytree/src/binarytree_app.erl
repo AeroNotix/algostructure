@@ -1,4 +1,4 @@
--module(hammerl_app).
+-module(binarytree_app).
 -behaviour(application).
 
 %% API.
