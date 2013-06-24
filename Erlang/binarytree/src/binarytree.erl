@@ -69,13 +69,13 @@ init([]) ->
 %%--------------------------------------------------------------------
 handle_call({add, Data}, _From, State) ->
     if
-        Value =:= nil ->
+        State#state.value =:= nil ->
             {reply, added, State#state{value=Data}};
-        Value > Data ->
+        State#state.value > Data ->
             if  %% Left/Right =:= nil when it's a bare node.
                 %% So we spawn a new node with the Data as
                 %% it's value.
-                Left =:= nil ->
+                State#state.left =:= nil ->
                     {ok, NewPid} = gen_server:start(binarytree, server, [nil, Data, nil]),
                     {reply, added, State#state{left=NewPid}};
                 true ->
@@ -84,11 +84,11 @@ handle_call({add, Data}, _From, State) ->
             end;
         true ->
             if
-                Right =:= nil ->
+                State#state.right =:= nil ->
                     NewPid = gen_server:start(binarytree, server, [nil, Data, nil]),
                     {reply, added, State#state{right=NewPid}};
                 true ->
-                    gen_server:call(Right, {add, Data}),
+                    gen_server:call(State#state.right, {add, Data}),
                     {reply, added, State}
             end
     end;
