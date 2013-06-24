@@ -103,13 +103,13 @@ handle_call(walk, _From, State) ->
                 nil ->
                     [];
                 _Else ->
-                    retrieve(State#state.left)
+                    gen_server:call(State#state.left, walk)
             end,
     RVals = case State#state.left of
                 R =:= nil ->
                     [];
                 _Else2 ->
-                    retrieve(State#state.left)
+                    gen_server:call(State#state.right, walk)
             end,
     Reply = LVals++[State#state.value]++RVals,
     {reply, Reply, State};
