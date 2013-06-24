@@ -189,7 +189,7 @@ code_change(_OldVsn, State, _Extra) ->
 
 %% Kicks off the walk by sending to the root node.
 walk()->
-    gen_server:call(?SERVER, walk, 5000).
+    gen_server:call(?SERVER, walk).
 
 %% Adds data to the tree.
 add(Data) ->
