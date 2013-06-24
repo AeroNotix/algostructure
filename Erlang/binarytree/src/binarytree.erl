@@ -33,7 +33,10 @@
 %% @end
 %%--------------------------------------------------------------------
 start_link() ->
-    gen_server:start_link(?MODULE, [], []).
+    Resp = gen_server:start_link({local, ?SERVER}, ?MODULE, [], []),
+    io:format("~p~n", [Resp]),
+    Resp.
+
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -50,7 +53,7 @@ start_link() ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
-init([]) ->
+init(_BinaryTreeVals) ->
     {ok, #state{left=nil, value=nil, right=nil}}.
 
 %%--------------------------------------------------------------------
@@ -76,7 +79,7 @@ handle_call({add, Data}, _From, State) ->
                 %% So we spawn a new node with the Data as
                 %% it's value.
                 State#state.left =:= nil ->
-                    {ok, NewPid} = gen_server:start(binarytree, server, [nil, Data, nil]),
+                    {ok, NewPid} = gen_server:start_link(?MODULE, [nil, Data, nil], []),
                     {reply, added, State#state{left=NewPid}};
                 true ->
                     gen_server:call(State#state.left, {add, Data}),
@@ -85,7 +88,7 @@ handle_call({add, Data}, _From, State) ->
         true ->
             if
                 State#state.right =:= nil ->
-                    NewPid = gen_server:start(binarytree, server, [nil, Data, nil]),
+                    {ok, NewPid} = gen_server:start_link(?MODULE, [nil, Data, nil], []),
                     {reply, added, State#state{right=NewPid}};
                 true ->
                     gen_server:call(State#state.right, {add, Data}),

@@ -7,7 +7,7 @@
 
 %% API.
 start(_Type, _Args) ->
-    ok.
+    binarytree_sup:start_link().
 
 stop(_State) ->
     ok.
