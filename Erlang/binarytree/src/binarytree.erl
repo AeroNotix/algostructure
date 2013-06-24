@@ -57,20 +57,13 @@ init([]) ->
 init([Left, Value, Right]) ->
     {ok, #state{left=Left, value=Value, right=Right}}.
 
-%%--------------------------------------------------------------------
-%% @private
 %% @doc
-%% Handling call messages
-%%
-%% @spec handle_call(Request, From, State) ->
-%%                                   {reply, Reply, State} |
-%%                                   {reply, Reply, State, Timeout} |
-%%                                   {noreply, State} |
-%%                                   {noreply, State, Timeout} |
-%%                                   {stop, Reason, Reply, State} |
-%%                                   {stop, Reason, State}
-%% @end
-%%--------------------------------------------------------------------
+%% When we get a call to add some data to the binary tree, we do so by
+%% spawning a new gen_server to hold the data and the relevant sibling
+%% pids. This is done by holding a reference to Pids which hold a
+%% lesser value (Left) and a reference to the pid which hold a higher
+%% value (Right).
+%% @spec handle_call({add, Data::term()}, _From::pid(), State::record()) -> added
 handle_call({add, Data}, _From, State) ->
     if
         State#state.value =:= nil ->
