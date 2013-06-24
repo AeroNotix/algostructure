@@ -8,7 +8,7 @@
 		  kernel,
 		  observer,
 		  runtime_tools,
-		  stdlib,
+		  stdlib
 		 ]},
   {mod, { binarytree_app, []}},
   {env, []}
