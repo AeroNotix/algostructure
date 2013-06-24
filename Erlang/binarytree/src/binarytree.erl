@@ -93,7 +93,7 @@ handle_call({add, Data}, _From, State) ->
             end
     end;
 
-handle_call({walk, Who}, _From, State) ->
+handle_call(walk, _From, State) ->
     %% When we get a call to walk, we recursively
     %% tell sub-nodes to walk as well using the
     %% call to retrieve which will accumulate
