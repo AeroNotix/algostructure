@@ -53,8 +53,13 @@ start_link() ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
-init(_BinaryTreeVals) ->
-    {ok, #state{left=nil, value=nil, right=nil}}.
+init(BinaryTreeVals) ->
+    case BinaryTreeVals of
+        [] ->
+            {ok, #state{left=nil, value=nil, right=nil}};
+        [Left, Value, Right] ->
+            {ok, #state{left=Left, value=Value, right=Right}}
+    end.
 
 %%--------------------------------------------------------------------
 %% @private
