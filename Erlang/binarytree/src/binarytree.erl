@@ -103,23 +103,16 @@ handle_call({add, Data}, _From, State) ->
 %% results and then send it back up the chain.
 %% @spec handle_call(walk, _From::pid(), State::record()) -> [term()]
 handle_call(walk, _From, State) ->
-    %% When we get a call to walk, we recursively
-    %% tell sub-nodes to walk as well using the
-    %% call to retrieve which will accumulate
-    %% the results and then send it back up the
-    %% chain.
-    LVals = case State#state.left of
+    F = fun(Who) ->
+            case Who of
                 nil ->
                     [];
                 _Else ->
-                    gen_server:call(State#state.left, walk)
-            end,
-    RVals = case State#state.right of
-                nil ->
-                    [];
-                _Else2 ->
-                    gen_server:call(State#state.right, walk)
-            end,
+                    gen_server:call(Who, walk)
+            end
+        end,
+    LVals = F(State#state.left),
+    RVals = F(State#state.right),
     Reply = LVals++[State#state.value]++RVals,
     {reply, Reply, State};
 
