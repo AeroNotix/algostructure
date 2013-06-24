@@ -1,12 +1,12 @@
 -module(binarytree).
 -export([init/0,
-		 add/1,
-		 addNValues/1,
-		 walk/0,
-		 addValues/1]).
+         add/1,
+         addNValues/1,
+         walk/0,
+         addValues/1]).
 -export([server/0,
-		 server/3,
-		 retrieve/1]).
+         server/3,
+         retrieve/1]).
 
 %% Registers the async'd Pid with the atom 'root'.
 init() ->
@@ -69,7 +69,7 @@ server(Left, Value, Right) ->
             end,
             Who ! {val, LVals++[Value]++RVals},
             server(Left, Value, Right);
-        
+
         quit ->
             if
                 Left =:= nil ->
@@ -124,9 +124,9 @@ addValues(N) ->
     addValues(N-1).
 
 testforn(N) ->
-	init(),
-	addNValues(N),
-	root ! quit.
+    init(),
+    addNValues(N),
+    root ! quit.
 
 main(_) ->
-	testforn(1000000).
+    testforn(1000000).
