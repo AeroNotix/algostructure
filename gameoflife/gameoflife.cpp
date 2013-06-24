@@ -115,7 +115,7 @@ int main() {
 			if (ch == 32) /* spacebar */
 				usleep(5);
 			else
-			usleep(10000);
+                usleep(10000);
 
 			updateBoard(board);
 			drawBoard(board);
