@@ -42,14 +42,14 @@ void updateBoard(int (board)[HEIGHT][WIDTH]) {
 		for (int y = 0; y < WIDTH; ++y) {
 		    int aliveN = 0;
 		    std::vector<int> neighbours = {
-			board[x-1][y+1],
-			board[x][y+1],
-			board[x+1][y+1],
-			board[x+1][y],
-			board[x+1][y-1],
-			board[x][y-1],
-			board[x-1][y-1],
-			board[x-1][y],
+                board[x-1][y+1],
+                board[x][y+1],
+                board[x+1][y+1],
+                board[x+1][y],
+                board[x+1][y-1],
+                board[x][y-1],
+                board[x-1][y-1],
+                board[x-1][y],
 		    };
 		    for (auto cell : neighbours) {
 			if (cell)
