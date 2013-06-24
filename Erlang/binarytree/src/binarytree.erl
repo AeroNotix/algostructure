@@ -109,7 +109,7 @@ handle_call(walk, _From, State) ->
                 _Else ->
                     gen_server:call(State#state.left, walk)
             end,
-    RVals = case State#state.left of
+    RVals = case State#state.right of
                 nil ->
                     [];
                 _Else2 ->
