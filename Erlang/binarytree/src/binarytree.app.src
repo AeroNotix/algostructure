@@ -5,11 +5,12 @@
   {vsn, "1"},
   {registered, []},
   {applications, [
-		  kernel,
-		  observer,
-		  runtime_tools,
-		  stdlib
-		 ]},
+                  kernel,
+                  observer,
+                  runtime_tools,
+                  stdlib,
+                  wx
+                 ]},
   {mod, { binarytree_app, []}},
   {env, []}
  ]
