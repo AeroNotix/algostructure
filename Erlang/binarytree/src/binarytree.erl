@@ -34,7 +34,6 @@
 %%--------------------------------------------------------------------
 start_link() ->
     Resp = gen_server:start_link({local, ?SERVER}, ?MODULE, [], []),
-    io:format("~p~n", [Resp]),
     Resp.
 
 
