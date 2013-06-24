@@ -110,18 +110,17 @@ handle_call(walk, _From, State) ->
     {reply, Reply, State};
 
 handle_call(quit, _From, State) ->
-    case State#state.left of
-        nil ->
-            ok;
-        _Else ->
-            gen_server:call(State#state.left, quit)
-    end,
-    case State#state.right of
-        nil ->
-            ok;
-        _Else2 ->
-            gen_server:call(State#state.right, quit)
-    end.
+    F = fun(Who) ->
+                case Who of
+                    nil ->
+                        ok;
+                    _Else ->
+                        gen_server:call(Who, quit)
+                end
+        end,
+    F(State#state.left),
+    F(State#state.right),
+    {reply, ok, State}.
 
 %%--------------------------------------------------------------------
 %% @private
