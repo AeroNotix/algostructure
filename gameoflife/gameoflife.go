@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -33,6 +34,10 @@ func copyBoard(newB [HEIGHT][WIDTH]int, oldB [HEIGHT][WIDTH]int) {
 			newB[x][y] = oldB[x][y]
 		}
 	}
+}
+
+func clearscreen() {
+	fmt.Print(strings.Repeat(string(rune(10)), WIDTH*HEIGHT))
 }
 
 func updateBoard(board [HEIGHT][WIDTH]int) {
@@ -106,12 +111,23 @@ func drawBoard(board [HEIGHT][WIDTH]int) {
 	}
 }
 
+func checkbounds(x, y int) bool {
+	if x+1 >= HEIGHT || x-1 <= 0 {
+		return false
+	}
+	if y+1 >= WIDTH || y-1 <= 0 {
+		return false
+	}
+	return true
+}
+
 func main() {
-	genBoard(board)
+	genBoard(&board)
 	drawBoard(board)
 	for {
-		time.Sleep(10000)
+		time.Sleep(10000000)
 		updateBoard(board)
 		drawBoard(board)
+		clearscreen()
 	}
 }
