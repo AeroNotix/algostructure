@@ -11,7 +11,7 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/0, walk/0, add/1, addNValues/1, addValues/1, testforn/1]).
+-export([start_link/0, walk/0, add/1, quit/0, addNValues/1, addValues/1, testforn/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -120,7 +120,7 @@ handle_call(quit, _From, State) ->
         end,
     F(State#state.left),
     F(State#state.right),
-    {reply, ok, State}.
+    {stop, normal, ok, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -184,6 +184,9 @@ walk()->
 %% Adds data to the tree.
 add(Data) ->
     gen_server:call(?SERVER, {add, Data}).
+
+quit() ->
+    gen_server:call(?SERVER, quit).
 
 addNValues(0) ->
     ok;
