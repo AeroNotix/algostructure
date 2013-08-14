@@ -5,14 +5,7 @@
 (defun nprefix ((s1 string) (s2 string))
   "nprefix takes two strings and computes the length of the longest
   prefix of each of the strings."
-  (let ((use (if (< (length s1) (length s2))
-		 s1
-	       s2))
-	(pre 0))
-    (loop for x from 0 below (length use)
-	  do (incf pre)
-	  while (char= (char s1 x) (char s2 x)))
-    pre))
+  (mismatch s1 s2))
 
 (defun sprefix (s1 s2)
   "sprefix takes two strings and returns the longest prefix of the
