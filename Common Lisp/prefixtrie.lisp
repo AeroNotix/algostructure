@@ -2,7 +2,7 @@
   ((prefix :accessor pre :initarg :pre :initform nil)
    (nodes :accessor nodes :initarg :nodes :initform '())))
 
-(defun nprefix ((s1 string) (s2 string))
+(defun nprefix (s1 s2)
   "nprefix takes two strings and computes the length of the longest
   prefix of each of the strings."
   (mismatch s1 s2))
@@ -11,9 +11,9 @@
   "sprefix takes two strings and returns the longest prefix of the
   strings as a string."
   (let ((differ-point (nprefix s1 s2)))
-    (if (= differ-point 0)
+    (if (equal differ-point 0)
 	"" ;; if they differ at the beginning then just return ""
-      (substring s1 0 differ-point))))
+      (subseq s1 0 differ-point))))
 
 (defmethod insert ((n Node) (s string))
   (if (equal nil (pre n))
@@ -23,21 +23,34 @@
 (defmethod add-to-self ((n Node) (s string))
   (setf (pre n) s))
 
+(defmethod add-to-node ((n Node) (s string))
+  :ok)
+
 (defmethod add-to-subnode ((n Node) (s string))
-  (let ((found nil))
+  (let ((loop-index 0))
     (loop for subn in (nodes n)
-	  while (null found)
 	  do (let ((common-prefix (sprefix (pre subn) s)))
-	       (if (string= (pre subn) s)
-		   (add-to-node subn (substring s (length common-prefix)))
-		 (progn))
-	       (setq found t)))
-  (push (make-instance 'Node :pre s) (nodes n))))
-	       
+	       (if (> (length common-prefix) 0)
+		   (if (string= (pre subn) s)
+		       (progn
+			 (print (list s (pre subn)))
+			 (add-to-node subn (subseq s (length common-prefix)))
+			 (return-from add-to-subnode))
+		     (progn
+		       (setf (pre subn) (subseq s (length common-prefix)))
+		       (setf (nth loop-index (nodes n))
+			     (make-instance 'Node :pre common-prefix :nodes (list subn)))
+		       (add-to-subnode (nth loop-index (nodes n)) (subseq s (length common-prefix)))
+		       (return-from add-to-subnode)))
+		 (incf loop-index)))))
+  (push (make-instance 'Node :pre s) (nodes n)))
+
+(defun walk-nodes ((n Node))
+  (print (pre n))
+  (dolist (node (nodes n))
+    (walk-nodes node)))
 
 (defvar *root* (make-instance 'Node))
-(insert *root* "something")
-(print (pre *root*))
-(insert *root* "somethingelse")
-(insert *root* "somethingelse2")
-(print (nodes *root*))
+(insert *root* "bread")
+(insert *root* "breadpudding")
+(walk-nodes *root*)
