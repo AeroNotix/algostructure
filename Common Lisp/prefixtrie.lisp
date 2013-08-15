@@ -24,9 +24,6 @@
 (defmethod add-to-self ((n Node) (s string))
   (setf (pre n) s))
 
-(defmethod add-to-node ((n Node) (s string))
-  :ok)
-
 (defmethod add-to-subnode ((n Node) (s string))
   (let ((loop-index 0))
     (loop for subn in (nodes n)
