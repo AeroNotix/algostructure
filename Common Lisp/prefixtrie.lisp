@@ -15,10 +15,11 @@
 	"" ;; if they differ at the beginning then just return ""
       (subseq s1 0 differ-point))))
 
+(defun new (sub node)
+  (make-instance 'Node :pre sub :nodes (list node)))
+
 (defmethod insert ((n Node) (s string))
-  (if (equal nil (pre n))
-      (add-to-self n s)
-    (add-to-subnode n s)))
+  (add-to-subnode n s))
 
 (defmethod add-to-self ((n Node) (s string))
   (setf (pre n) s))
@@ -31,26 +32,26 @@
     (loop for subn in (nodes n)
 	  do (let ((common-prefix (sprefix (pre subn) s)))
 	       (if (> (length common-prefix) 0)
-		   (if (string= (pre subn) s)
+		   (if (string= (pre subn) common-prefix)
 		       (progn
-			 (print (list s (pre subn)))
-			 (add-to-node subn (subseq s (length common-prefix)))
+			 (add-to-subnode subn (subseq s (length common-prefix)))
 			 (return-from add-to-subnode))
 		     (progn
-		       (setf (pre subn) (subseq s (length common-prefix)))
-		       (setf (nth loop-index (nodes n))
-			     (make-instance 'Node :pre common-prefix :nodes (list subn)))
+		       (setf (pre subn) (subseq (pre subn) (length common-prefix)))
+		       (setf (nth loop-index (nodes n)) (new common-prefix subn))
 		       (add-to-subnode (nth loop-index (nodes n)) (subseq s (length common-prefix)))
 		       (return-from add-to-subnode)))
 		 (incf loop-index)))))
   (push (make-instance 'Node :pre s) (nodes n)))
 
-(defun walk-nodes ((n Node))
+(defmethod walk-nodes ((n Node))
   (print (pre n))
-  (dolist (node (nodes n))
+  (dolist (node (reverse (nodes n)))
     (walk-nodes node)))
 
 (defvar *root* (make-instance 'Node))
 (insert *root* "bread")
 (insert *root* "breadpudding")
+(insert *root* "breadpuddingpie")
+(insert *root* "breadpuddingpieyeah?")
 (walk-nodes *root*)
