@@ -22,3 +22,13 @@ let rec walk n =
   | Empty -> []
   | Node (v, l, r) ->
      walk l @ [v] @ walk r
+
+let rec contains n v =
+  match n with
+  | Empty -> false
+  | Node (ov, l, r) when ov = v ->
+     true
+  | Node (ov, l, _) when ov > v ->
+     contains l v
+  | Node (_, _, r) ->
+     contains r v
