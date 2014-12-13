@@ -17,10 +17,6 @@
 (define (shift-bucket-hash hash bucket-exponent)
   (airthmetic-shift hash bucket-exponent))
   
-(define 
-;;
-
-  
 ;; trailing-zeroes: Num -> (union 32 Nat)
 ;; Purpose: Counts the number of trailing 0 bits in num.
 (define (trailing_zeroes num)
