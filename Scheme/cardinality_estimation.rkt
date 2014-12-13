@@ -10,10 +10,14 @@
 ;; Purpose: Produces an estimation of the number of unique elements in the input set values.
 (define (estimate-cardinality values bucket-exponent)
 
+
+;; ##########################
 ;; Helpers:
+;; max-zeroes: Num HashTable Num -> (listof HashTable)
 (define (max-zeroes bucket-index hash lst_val)
   (append (max (max-zeroes bucket-index hash lst_val
 
+;; shift-bucket-hash: HashTable Nat -> Any
 (define (shift-bucket-hash hash bucket-exponent)
   (airthmetic-shift hash bucket-exponent))
   
@@ -31,4 +35,5 @@
   (cond [(equal? (bitwise-and (arithmetic-shift num acc) 1) 0)
           (count-trailing num (+ acc 1))]
         [else acc]))
+;; #######
     
